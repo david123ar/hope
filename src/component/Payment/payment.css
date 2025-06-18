@@ -1,0 +1,214 @@
+/* Root container */
+.payment-container {
+  width: 99vw;
+  min-height: 100vh;
+  background-color: #0f172a; /* Deep dark blue */
+  color: #f8fafc;
+  padding: 1rem;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+/* Section title */
+.payment-title {
+  font-size: 1.75rem;
+  color: #00f2fe;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  margin-top: 65px;
+}
+
+/* Section subtitle */
+.payment-subtitle {
+  font-size: 1rem;
+  color: #cbd5e1;
+  margin-bottom: 1.25rem;
+}
+
+/* Each rules section block */
+.payment-section {
+  background-color: #1e293b;
+  border-left: 4px solid #00f2fe;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: background 0.2s ease;
+  border-radius: 4px;
+}
+
+.payment-section:hover {
+  background-color: #273549;
+}
+
+/* Section headers */
+.payment-section h2 {
+  font-size: 1.125rem;
+  color: #00f2fe;
+  margin-bottom: 0.5rem;
+}
+
+/* Section body text */
+.payment-section p,
+.payment-section ul {
+  font-size: 0.95rem;
+  color: #e2e8f0;
+  line-height: 1.5;
+  margin: 0.25rem 0;
+}
+
+/* Lists */
+.payment-section ul {
+  list-style-type: disc;
+  padding-left: 1.25rem;
+}
+
+/* Links */
+.payment-section a {
+  color: #00f2fe;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.payment-section a:hover {
+  color: #38bdf8;
+}
+
+/* Filter container */
+.filter-container {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.filter-toggle-btn {
+  background-color: #00f2fe;
+  color: #0f172a;
+  border: none;
+  padding: 0.5rem 1.25rem;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.filter-toggle-btn:hover {
+  background-color: #02d6e9;
+}
+
+.filter-box {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.filter-box label {
+  font-size: 0.9rem;
+  color: #f8fafc;
+}
+
+.filter-box input[type="date"] {
+  margin-left: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  border: none;
+  font-size: 0.9rem;
+}
+
+/* Clear Filter Button */
+.clear-filter-btn {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.clear-filter-btn:hover {
+  background-color: #b91c1c;
+}
+
+/* Payment history table */
+.payment-history {
+  overflow-x: auto;
+  margin-top: 1rem;
+  border-radius: 6px;
+}
+
+.payment-history table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #1f2937;
+  min-width: 900px;
+}
+
+.payment-history th,
+.payment-history td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #334155;
+  font-size: 0.95rem;
+}
+
+.payment-history th {
+  background-color: #111827;
+  color: #00f2fe;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.payment-history td {
+  color: #e5e7eb;
+  vertical-align: top;
+}
+
+.payment-history tr:hover {
+  background-color: #273549;
+}
+
+/* Document links */
+.payment-history a {
+  color: #00f2fe;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.payment-history a:hover {
+  color: #38bdf8;
+}
+
+/* Footer note */
+.payment-footer {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-top: 2rem;
+}
+
+/* Responsive scaling */
+@media screen and (max-width: 600px) {
+  .payment-title {
+    font-size: 1.5rem;
+  }
+
+  .payment-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .payment-section h2 {
+    font-size: 1rem;
+  }
+
+  .payment-section p,
+  .payment-section ul {
+    font-size: 0.9rem;
+  }
+
+  .payment-history table {
+    font-size: 0.9rem;
+  }
+}

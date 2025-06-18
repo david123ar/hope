@@ -1,0 +1,483 @@
+.oit {
+  display: flex;
+  /* flex-direction: column; Stack items vertically */
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* Full height of viewport */
+}
+
+.oit-3 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* margin-top: 1rem; Optional spacing */
+  width: 30%;
+}
+
+.inn-1 {
+  position: relative;
+  width: 270px;
+  height: 500px;
+  border: 5px solid black;
+  border-radius: 30px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 0 50px #02f2ff33;
+  background-color: #000;
+}
+
+.background-image {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  /* filter: brightness(0.6); */
+  /* No blur or dark filter */
+}
+
+.text-over {
+  position: relative;
+  z-index: 1;
+  color: white;
+  font-weight: bold;
+  font-size: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%; /* ensures vertical space is fully used */
+  padding: 10px;
+}
+
+.text-label {
+  /* text-align: center; */
+  margin-top: 200px;
+  /* padding-bottom: 10px; */
+}
+
+.banner-ad {
+  position: sticky;
+  top: 10px;
+  width: 100%;
+  height: 50px;
+  background: #2a2a2a;
+  /* border: 2px dashed #fdbd73; */
+  border-radius: 12px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fdbd73;
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 30px;
+  overflow: hidden;
+  user-select: none;
+  box-shadow: 0 4px 10px rgba(253, 189, 115, 0.3);
+  z-index: 1;
+  transition: transform 0.3s ease;
+}
+
+.banner-ad:hover {
+  transform: scale(1.02);
+  background: #fdbd73;
+  color: #121212;
+  border-color: #ffdcae;
+  box-shadow: 0 8px 20px rgba(253, 189, 115, 0.6);
+  cursor: pointer;
+}
+
+.banner-wrapper {
+  position: relative;
+  width: 100%;
+  height: 90px; /* same as iframe height */
+}
+
+.poster {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  z-index: 100;
+  overflow: hidden;
+  border: 2px solid black;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.7),
+    0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+.user {
+  position: absolute;
+  top: 115px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  font-size: 15px;
+  font-weight: 600;
+  color: white;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 0 8px;
+  border-radius: 12px;
+  backdrop-filter: blur(6px);
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+}
+
+.bio {
+  position: absolute;
+  top: 140px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  font-size: 13px;
+  font-weight: 400;
+  color: #f0f0f0;
+  max-width: 85%;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 0 8px;
+  border-radius: 10px;
+  backdrop-filter: blur(4px);
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
+}
+
+.linko {
+  position: absolute;
+  top: 170px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+
+  height: 220px; /* Set height for scrolling */
+  overflow-y: auto;
+  padding-right: 5px; /* Prevent text from cutting off on scroll */
+}
+
+.linko::-webkit-scrollbar {
+  width: 6px;
+}
+
+.linko::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.linko::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.link {
+  width: 250px;
+  height: 40px !important;
+  flex-shrink: 0;
+  border-radius: 20px;
+  border: 1px solid white;
+  background: rgba(255, 255, 255, 0.1); /* semi-transparent background */
+  backdrop-filter: blur(8px); /* blur effect */
+  -webkit-backdrop-filter: blur(8px); /* Safari support */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: white;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.6); /* shadow behind text */
+
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4), 0 -4px 8px rgba(0, 0, 0, 0.3),
+    4px 0 8px rgba(0, 0, 0, 0.3), -4px 0 8px rgba(0, 0, 0, 0.3);
+}
+
+.poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.banner-ad2 {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  height: 50px;
+  background: #2a2a2a;
+  /* border: 2px dashed #fdbd73; */
+  border-radius: 12px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fdbd73;
+  font-weight: 600;
+  font-size: 16px;
+  /* margin-bottom: 30px; */
+  overflow: hidden;
+  user-select: none;
+  box-shadow: 0 4px 10px rgba(253, 189, 115, 0.3);
+  z-index: 100;
+  transition: transform 0.3s ease;
+}
+
+.banner-ad2:hover {
+  transform: scale(1.02);
+  background: #fdbd73;
+  color: #121212;
+  border-color: #ffdcae;
+  box-shadow: 0 8px 20px rgba(253, 189, 115, 0.6);
+  cursor: pointer;
+}
+
+/* adding link side */
+
+.oit-in {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  border-right: 1px solid #00f2fe44;
+
+  height: 80vh;
+  max-height: calc(100vh - 65px);
+  margin-top: 65px;
+  /* overflow-y: auto; */
+  box-sizing: border-box;
+}
+
+/* adding link side */
+
+/* modal */
+
+/* Optional fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* this is for add link box */
+
+/* this is for add link box */
+
+/* design box */
+
+.design-gallery {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 10px;
+  height: 100vh;
+  overflow-y: auto;
+  /* scrollbar-width: thin; /* Firefox support */
+  /* scrollbar-color: rgba(255, 255, 255, 0.3) transparent;  */
+}
+
+.design-gallery::-webkit-scrollbar {
+  width: 6px;
+}
+
+.design-gallery::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.design-gallery::-webkit-scrollbar-thumb:hover {
+  background: var(--theme);
+}
+
+.design-gallery::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+  transition: background 0.3s ease;
+}
+
+.inn-1lite {
+  position: relative;
+  width: 150px;
+  height: 250px;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 0 30px #00f2fe33;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-color: #1e293b;
+  border: 2px solid #00f2fe33;
+}
+
+.inn-1lite:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 50px #00f2fe88;
+  border-color: #00f2fe;
+}
+
+.linko-lite {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  height: 250px;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.linko-lite::-webkit-scrollbar {
+  width: 6px;
+}
+
+.linko-lite::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.linko-lite::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.link-lite {
+  width: 130px;
+  height: 30px;
+  border-radius: 20px;
+  border: 1px solid white;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: white;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+  transition: background 0.3s ease;
+  cursor: pointer;
+}
+
+.link-lite:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.oitt {
+  display: none;
+}
+
+.otil {
+  display: flex;
+  align-items: center;
+}
+
+.oit-tip {
+  font-size: 20px !important;
+  color: #00f2fe;
+  font-weight: 700;
+}
+
+/* Design box */
+
+@media (max-width: 1000px) {
+  .oit-3 {
+    display: none;
+    width: 100%;
+    padding: 10px;
+    justify-content: start;
+  }
+  .oit-in {
+    width: 100%;
+    border: 0;
+    margin: 10px;
+    margin-top: 65px;
+  }
+  .add-trigger {
+    width: 80%;
+  }
+
+  .oitt {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    justify-content: space-between;
+    margin: 10px 0;
+  }
+  .oit-tit {
+    font-size: 20px !important;
+    color: #00f2fe;
+    font-weight: 700;
+  }
+  .outii {
+    padding: 5px 15px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid #fff;
+  }
+  .outii:hover {
+    color: #00f2fe;
+    border: 1px solid #00c1d6;
+  }
+  .out-lit {
+    font-size: 15px !important;
+    /* display: flex;
+    align-items: center; */
+  }
+
+  .activa {
+    display: flex;
+  }
+  .hidde {
+    display: none;
+  }
+  .otil {
+    display: none;
+  }
+}
+
+@media (max-width: 500px) {
+  .oit-2 {
+    padding: 10px;
+    width: 100%;
+  }
+
+  .oster {
+    width: 50px;
+    height: 50px;
+  }
+  .edit-btn {
+    font-size: 12px;
+    padding: 2px;
+  }
+  .username {
+    font-size: 13px;
+  }
+  .biog {
+    font-size: 12px;
+  }
+  .morre {
+    font-size: 14px;
+  }
+  .add-box {
+    width: 100%;
+    padding: 10px;
+  }
+  .add-trigger {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+  }
+  .links-wrapper {
+    width: 100%;
+    padding: 0;
+  }
+}

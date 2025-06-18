@@ -1,0 +1,216 @@
+:root {
+  --theme: #00f2fe;
+}
+
+/* Modal Background */
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  min-height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  width: 100%;
+  z-index: -1;
+  transition: all 0.1s ease-in-out;
+}
+
+/* Modal Content Box */
+.modal-content {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: rgba(59, 57, 57, 0.7);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  padding: 20px;
+  border-radius: 10px;
+  min-width: 450px;
+  transition: all 0.2s ease-in-out;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+}
+
+/* Heading */
+.heddio {
+  font-size: 25px;
+  font-weight: 600;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.heddp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Input Field Wrapper */
+.midO {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* Input Labels */
+.midOT {
+  font-size: 13px;
+  color: #aca7a7;
+}
+
+/* Input Styles */
+.midOI {
+  padding: 10px 15px;
+  font-size: 14px;
+  border-radius: 10px;
+  color: black;
+  outline: none;
+  background: #fff;
+  border: none;
+  width: 100%;
+  box-sizing: border-box;
+  transition: background-color 0.3s ease;
+}
+
+/* Fix autofill background and text color */
+.midOI:-webkit-autofill,
+.midOI:-webkit-autofill:focus,
+.midOI:-webkit-autofill:hover {
+  box-shadow: 0 0 0 1000px #fff inset !important;
+  -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
+  -webkit-text-fill-color: #000 !important;
+}
+
+/* Relative wrapper for eye toggle */
+.relati {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 15px;
+  gap: 10px;
+  border-radius: 10px;
+  background: #fff;
+  width: 100%;
+}
+
+/* Password input style inside wrapper */
+.midN {
+  width: 90%;
+  background: white;
+  color: black;
+  border: none;
+  padding: 10px 15px;
+  font-size: 14px;
+  border-radius: 10px;
+  outline: none;
+}
+
+/* Eye icon */
+.icon-position {
+  color: #6b7280;
+  font-size: 1.25rem;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+/* Checkbox and forgot password */
+.midI {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.kinto {
+  font-size: 17px;
+  display: flex;
+  align-items: center;
+  font-weight: 300;
+  line-height: 24px;
+  gap: 5px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.checki {
+  width: 20px;
+  height: 20px;
+}
+
+/* Forgot Password link */
+.forget-pass {
+  color: var(--theme);
+  cursor: pointer;
+}
+
+/* Submit button */
+.btio {
+  font-size: 15px;
+  font-weight: 600;
+  color: black;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.btiom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--theme);
+  border-radius: 10px;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+/* Register/Login toggle line */
+.line-up {
+  font-size: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 400;
+  gap: 5px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+/* Responsive adjustments */
+@media (max-width: 400px) {
+  .modal-content {
+    min-width: 100%;
+    padding: 15px;
+    border-radius: 5px;
+  }
+
+  .heddio {
+    font-size: 20px;
+  }
+
+  .kinto {
+    font-size: 15px;
+    line-height: 20px;
+  }
+
+  .btio {
+    font-size: 14px;
+  }
+
+  .btiom {
+    padding: 10px;
+  }
+
+  .checki {
+    width: 15px;
+    height: 15px;
+  }
+
+  .midOI {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .midOT {
+    font-size: 12px;
+  }
+}

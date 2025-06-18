@@ -1,0 +1,171 @@
+:root {
+  --accent: #1e90ff;
+  --text: #eaeaea;
+  --border: #444;
+  --bg: #0f172a;
+  --card-bg: #1e293b;
+  --hover: #273549;
+}
+
+.stats-container {
+  min-height: 100vh;
+  width: 100vw;
+  background-color: var(--bg);
+  padding: 2rem 1rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stats-title {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: var(--text);
+  text-align: center;
+  margin-top: 65px;
+}
+
+.stats-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  justify-content: center;
+  width: 100%;
+  max-width: 800px;
+}
+
+.datepicker-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.datepicker-wrapper label {
+  margin-bottom: 0.3rem;
+  color: var(--text);
+}
+
+.custom-datepicker {
+  background: var(--card-bg);
+  color: var(--text);
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  padding: 0.6rem 0.8rem;
+  font-size: 0.9rem;
+  width: 180px;
+}
+
+.custom-datepicker::placeholder {
+  color: #aaa;
+}
+
+.stats-summary {
+  display: flex;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.card {
+  background: var(--card-bg);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.6);
+  transition: transform 0.2s;
+  min-width: 150px;
+  max-width: 200px;
+  flex: 1 1 150px;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  background-color: var(--hover);
+}
+
+.card span {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 0.3rem;
+}
+
+.stats-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.stats-table {
+  width: 100%;
+  max-width: 1000px;
+  border-collapse: collapse;
+  margin: 0 auto;
+  color: var(--text);
+}
+
+.stats-table th,
+.stats-table td {
+  border: 1px solid var(--border);
+  padding: 0.6rem;
+  font-size: 0.85rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.stats-table thead {
+  background-color: var(--accent);
+  color: #fff;
+}
+
+.stats-table tbody tr:hover {
+  background-color: var(--hover);
+}
+
+.stats-table th {
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.stats-table th:hover {
+  background: #3399ff;
+}
+
+@media (max-width: 600px) {
+  .stats-title {
+    font-size: 1.5rem;
+  }
+
+  .stats-controls {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .custom-datepicker {
+    width: 100%;
+  }
+
+  .stats-summary {
+    gap: 0.5rem;
+  }
+
+  .card {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+    max-width: 100%;
+  }
+
+  .card span {
+    font-size: 1rem;
+  }
+
+  .stats-table th,
+  .stats-table td {
+    font-size: 0.75rem;
+    padding: 0.4rem;
+  }
+}

@@ -1,0 +1,721 @@
+:root {
+  --theme-color: #00f2fe;
+}
+
+/* Container */
+.share-app {
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #1e1e1e;
+  color: white;
+  border-radius: 12px;
+  flex-wrap: wrap;
+  border: 1px solid var(--theme-color);
+  box-shadow: 0 0 10px var(--theme-color);
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: 10px;
+  margin-left: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.btnio {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.primary {
+  color: var(--theme-color);
+  font-weight: 600;
+  margin: 0 5px;
+}
+.secoi {
+  color: #fff;
+  font-weight: 400;
+
+}
+
+/* Buttons */
+.copy-btn,
+.share-btn {
+  background-color: #2e2e2e !important;
+  border: 1px solid transparent;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: white !important;
+  cursor: pointer;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.copy-btn:hover,
+.share-btn:hover {
+  background-color: var(--theme-color) !important;
+  color: #000 !important;
+}
+
+/* Modal Overlay */
+.share-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Modal Box */
+.share-modal {
+  background: #111;
+  color: white;
+  border-radius: 16px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 600px;
+  position: relative;
+  top: 50%;
+  border: 2px solid var(--theme-color);
+  box-shadow: 0 0 15px var(--theme-color);
+  transform: translateY(-50%);
+}
+
+/* Modal Header */
+.share-modal h2 {
+  margin-bottom: 1rem;
+  color: var(--theme-color);
+  text-align: center;
+}
+
+/* Grid Layout */
+.share-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+/* Brand-specific share button styles */
+.share-grid .WhatsappShareButton {
+  background-color: #25d366 !important;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-grid .FacebookShareButton {
+  background-color: #1877f2 !important;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-grid .TelegramShareButton {
+  background-color: #0088cc !important;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-grid .RedditShareButton {
+  background-color: #ff4500 !important;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-grid .TwitterShareButton {
+  background-color: #1da1f2 !important;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-grid .EmailShareButton {
+  background-color: #7f7f7f !important;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-grid .HatenaShareButton {
+  background-color: #00a4de !important;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-grid .InstapaperShareButton {
+  background-color: #000000 !important;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-grid .LineShareButton {
+  background-color: #00c300 !important;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-grid .LinkedinShareButton {
+  background-color: #0a66c2 !important;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-grid .LivejournalShareButton {
+  background-color: #2fac66 !important;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-grid .MailruShareButton {
+  background-color: #168de2 !important;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-grid .OKShareButton {
+  background-color: #ed812b !important;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-grid .PinterestShareButton {
+  background-color: #bd081c !important;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-grid .PocketShareButton {
+  background-color: #ef4056 !important;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-grid .TumblrShareButton {
+  background-color: #36465d !important;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-grid .ViberShareButton {
+  background-color: #665cac !important;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-grid .VKShareButton {
+  background-color: #4c75a3 !important;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-grid .WorkplaceShareButton {
+  background-color: #0078d7 !important;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.copy-btn,
+.share-btn {
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-weight: 600;
+}
+
+.copy-btn:hover,
+.share-btn:hover {
+  color: var(--theme-color);
+}
+
+.button-text.large-screen-only {
+  display: none;
+}
+
+@media (min-width: 600px) {
+  .button-text.large-screen-only {
+    display: inline;
+  }
+}
+
+/* Modal */
+.share-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.share-modal {
+  background: #222;
+  border-radius: 14px;
+  padding: 1.5rem 2rem;
+  width: 90vw;
+  max-width: 520px;
+  color: white;
+  position: relative;
+  transform-origin: center center;
+}
+
+.share-modal h2 {
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 700;
+}
+
+/* Grid of share buttons */
+.share-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+  gap: 1rem;
+  justify-items: center;
+}
+
+/* Each button styling */
+.share-grid > * {
+  border-radius: 50%;
+  padding: 16px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: white !important;
+  cursor: pointer;
+  transition: transform 0.2s, filter 0.2s;
+  user-select: none;
+}
+
+/* Hover effect */
+.share-grid > *:hover {
+  transform: scale(1.1);
+  filter: brightness(1.1);
+}
+
+.shareDic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+/* Brand colors */
+.WhatsappShareButton {
+  background-color: #25d366 !important;
+}
+
+.FacebookShareButton {
+  background-color: #1877f2 !important;
+}
+
+.TelegramShareButton {
+  background-color: #0088cc !important;
+}
+
+.RedditShareButton {
+  background-color: #ff4500 !important;
+}
+
+.TwitterShareButton {
+  background-color: #1da1f2 !important;
+}
+
+.EmailShareButton {
+  background-color: #7f7f7f !important;
+}
+
+.HatenaShareButton {
+  background-color: #00a4de !important;
+}
+
+.InstapaperShareButton {
+  background-color: #1f1f1f !important;
+}
+
+.LineShareButton {
+  background-color: #00c300 !important;
+}
+
+.LinkedinShareButton {
+  background-color: #0077b5 !important;
+}
+
+.LivejournalShareButton {
+  background-color: #00b0ea !important;
+}
+
+.MailruShareButton {
+  background-color: #168de2 !important;
+}
+
+.OKShareButton {
+  background-color: #ed812b !important;
+}
+
+.PinterestShareButton {
+  background-color: #bd081c !important;
+}
+
+.PocketShareButton {
+  background-color: #ef4056 !important;
+}
+
+.TumblrShareButton {
+  background-color: #36465d !important;
+}
+
+.ViberShareButton {
+  background-color: #665cac !important;
+}
+
+.VKShareButton {
+  background-color: #4c75a3 !important;
+}
+
+.WorkplaceShareButton {
+  background-color: #3b5998 !important;
+}
+
+/* Close button */
+.close-modal {
+  margin-top: 1.5rem;
+  background-color: transparent;
+  color: var(--theme-color);
+  border: 1px solid var(--theme-color);
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.close-modal:hover {
+  background-color: var(--theme-color);
+  color: #000;
+}
+
+@media screen and (max-width: 430px) {
+  .share-grid {
+    gap: 0.7rem;
+  }
+  .share-grid .WhatsappShareButton {
+    background-color: #25d366 !important;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .share-grid .FacebookShareButton {
+    background-color: #1877f2 !important;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .share-grid .TelegramShareButton {
+    background-color: #0088cc !important;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .share-grid .RedditShareButton {
+    background-color: #ff4500 !important;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .share-grid .TwitterShareButton {
+    background-color: #1da1f2 !important;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .share-grid .EmailShareButton {
+    background-color: #7f7f7f !important;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .share-grid .HatenaShareButton {
+    background-color: #00a4de !important;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .share-grid .InstapaperShareButton {
+    background-color: #000000 !important;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .share-grid .LineShareButton {
+    background-color: #00c300 !important;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .share-grid .LinkedinShareButton {
+    background-color: #0a66c2 !important;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .share-grid .LivejournalShareButton {
+    background-color: #2fac66 !important;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .share-grid .MailruShareButton {
+    background-color: #168de2 !important;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .share-grid .OKShareButton {
+    background-color: #ed812b !important;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .share-grid .PinterestShareButton {
+    background-color: #bd081c !important;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .share-grid .PocketShareButton {
+    background-color: #ef4056 !important;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .share-grid .TumblrShareButton {
+    background-color: #36465d !important;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .share-grid .ViberShareButton {
+    background-color: #665cac !important;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .share-grid .VKShareButton {
+    background-color: #4c75a3 !important;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .share-grid .WorkplaceShareButton {
+    background-color: #0078d7 !important;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
