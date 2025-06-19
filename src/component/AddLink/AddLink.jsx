@@ -72,7 +72,7 @@ const SortableItem = ({
     }
   }, []);
 
-  const maxChars = screenWidth < 500 ? 20 : 50;
+  const maxChars = screenWidth < 500 ? 18 : 50;
 
   return (
     <div ref={setNodeRef} style={style} className="link-item" {...attributes}>
@@ -97,7 +97,8 @@ const SortableItem = ({
                 onChange={(e) => setEditingValue(e.target.value)}
                 onBlur={() => onSaveEdit(index, "name", editingValue)}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter") onSaveEdit(index, "name", editingValue);
+                  if (e.key === "Enter")
+                    onSaveEdit(index, "name", editingValue);
                 }}
                 style={{
                   border: "none",
@@ -510,7 +511,7 @@ const AddLink = (props) => {
               <div className="out-lit">
                 <FaEye />
               </div>
-              <div className="out-lit">View</div>
+              <div className="out-lit">Preview</div>
             </div>
           </div>
 
@@ -621,11 +622,22 @@ const AddLink = (props) => {
                 </DndContext>
               </div>
             )}
-            <Share
-              ShareUrl={`https://biolynk.shoko.fun/${session?.user?.id}${
-                props.refer ? `?refer=${props.refer}` : `?refer=weebhideout`
-              }`}
-            />
+            <div
+              style={{
+                position: "sticky",
+                bottom: 0,
+                background: "#fff", // or your theme background
+                zIndex: 1000,
+                padding: "1rem",
+                borderTop: "1px solid #ccc", // optional
+              }}
+            >
+              <Share
+                ShareUrl={`https://biolynk.shoko.fun/${session?.user?.id}${
+                  props.refer ? `?refer=${props.refer}` : `?refer=weebhideout`
+                }`}
+              />
+            </div>
           </div>
         </div>
 
