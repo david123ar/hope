@@ -625,8 +625,8 @@ const AddLink = (props) => {
             <div
               style={{
                 position: "sticky",
-                bottom: 0,
-                background: "#fff", // or your theme background
+                bottom: 70,
+                // background: "#fff", // or your theme background
                 zIndex: 1000,
                 padding: "1rem",
                 borderTop: "1px solid #ccc", // optional
