@@ -402,7 +402,7 @@ const AddLink = (props) => {
       <Navbar />
       {showModali && (
         <div className="avatar-modal" onClick={() => setShowModali(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-conten" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3>Select an Avatar</h3>
             </div>
