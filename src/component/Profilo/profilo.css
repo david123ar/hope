@@ -22,12 +22,12 @@
   padding: 10px;
   overflow-y: auto;
   flex-direction: column;
-  background: var(--dark);
+  background: #1e293b;
   border: 1px solid #555050;
   border-radius: 20px;
   transition: all 0.2s ease-in-out;
 }
-.profD {
+.profD { 
   padding: 10px 15px;
   background: var(--grey-dark);
   border-radius: 20px;

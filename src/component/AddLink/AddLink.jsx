@@ -612,6 +612,11 @@ const AddLink = (props) => {
                 </DndContext>
               </div>
             )}
+            <Share
+              ShareUrl={`https://biolynk.shoko.fun/${session?.user?.id}${
+                props.refer ? `?refer=${props.refer}` : `?refer=weebhideout`
+              }`}
+            />
           </div>
         </div>
 
@@ -702,7 +707,7 @@ const AddLink = (props) => {
             </div>
           </div>
           <Share
-            ShareUrl={`https://animoon.me/home${
+            ShareUrl={`https://biolynk.shoko.fun/${session?.user?.id}${
               props.refer ? `?refer=${props.refer}` : `?refer=weebhideout`
             }`}
           />

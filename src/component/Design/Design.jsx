@@ -5,8 +5,9 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
 import { useSession } from "next-auth/react";
+import Share from "../Share/Share";
 
-export default function Design() {
+export default function Design(props) {
   const [showModal, setShowModal] = useState(false);
   const { data: session } = useSession();
   const [user, setUser] = useState("");
@@ -125,6 +126,11 @@ export default function Design() {
                 </div>
               </div>
             ))}
+            <Share
+              ShareUrl={`https://biolynk.shoko.fun/${session?.user?.id}${
+                props.refer ? `?refer=${props.refer}` : `?refer=weebhideout`
+              }`}
+            />
           </div>
         </div>
 
@@ -204,6 +210,12 @@ export default function Design() {
               </div>
             </div>
           </div>
+
+          <Share
+            ShareUrl={`https://biolynk.shoko.fun/${session?.user?.id}${
+              props.refer ? `?refer=${props.refer}` : `?refer=weebhideout`
+            }`}
+          />
         </div>
       </div>
       <Footer />
