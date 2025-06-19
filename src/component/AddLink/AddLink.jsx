@@ -72,7 +72,7 @@ const SortableItem = ({
     }
   }, []);
 
-  const maxChars = screenWidth < 500 ? 25 : 50;
+  const maxChars = screenWidth < 500 ? 20 : 50;
 
   return (
     <div ref={setNodeRef} style={style} className="link-item" {...attributes}>
