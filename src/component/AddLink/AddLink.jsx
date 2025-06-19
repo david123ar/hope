@@ -53,11 +53,26 @@ const SortableItem = ({
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    // display: isVisible ? "flex" : "none", // hide if not visible
   };
 
   const isEditingName = editingIndex === index && editingField === "name";
   const isEditingUrl = editingIndex === index && editingField === "url";
+
+  const [screenWidth, setScreenWidth] = useState(1024); // Default for SSR
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsClient(true);
+      setScreenWidth(window.innerWidth);
+
+      const handleResize = () => setScreenWidth(window.innerWidth);
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }
+  }, []);
+
+  const maxChars = screenWidth < 500 ? 25 : 50;
 
   return (
     <div ref={setNodeRef} style={style} className="link-item" {...attributes}>
@@ -82,8 +97,7 @@ const SortableItem = ({
                 onChange={(e) => setEditingValue(e.target.value)}
                 onBlur={() => onSaveEdit(index, "name", editingValue)}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter")
-                    onSaveEdit(index, "name", editingValue);
+                  if (e.key === "Enter") onSaveEdit(index, "name", editingValue);
                 }}
                 style={{
                   border: "none",
@@ -95,8 +109,8 @@ const SortableItem = ({
               />
             ) : (
               <>
-                {link.name.length > 50
-                  ? `${link.name.slice(0, 50)}...`
+                {link.name.length > maxChars
+                  ? `${link.name.slice(0, maxChars)}...`
                   : link.name}
                 <GoPencil />
               </>
@@ -130,15 +144,9 @@ const SortableItem = ({
                 }}
               />
             ) : (
-              <div
-                // href={link.url}
-                // target="_blank"
-                // rel="noopener noreferrer"
-                // onClick={(e) => e.preventDefault()} // prevent link from opening on pencil click
-                className="linkp"
-              >
-                {link.url.length > 50
-                  ? `${link.url.slice(0, 50)}...`
+              <div className="linkp">
+                {link.url.length > maxChars
+                  ? `${link.url.slice(0, maxChars)}...`
                   : link.url}
                 <GoPencil />
               </div>
@@ -146,6 +154,7 @@ const SortableItem = ({
           </div>
         </div>
       </div>
+
       <div className="link-2">
         <button
           onClick={toggleVisibility}
@@ -221,7 +230,7 @@ const AddLink = (props) => {
 
   const handleAddReferralLink = () => {
     setName("Referral Link");
-    setUrl("https://your-referral-url.com"); // <-- Replace with your actual referral link
+    setUrl(`https://biolynk.shoko.fun/${session?.user?.id}`); // <-- Replace with your actual referral link
     setIsAdding(true);
   };
 
