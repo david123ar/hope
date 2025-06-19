@@ -6,7 +6,7 @@
 .share-app {
   gap: 1rem;
   padding: 1rem;
-  background-color: #273549;
+  background-color: #1e293b;
   color: white;
   border-radius: 12px;
   flex-wrap: wrap;
@@ -48,7 +48,7 @@
   padding: 8px 12px;
   border-radius: 8px;
   color: white !important;
-  cursor: pointer;
+  cursor: pointer; 
   transition: 0.2s;
   display: flex;
   align-items: center;
