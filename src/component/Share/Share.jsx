@@ -83,7 +83,7 @@ export default function Share({ ShareUrl, arise }) {
   useEffect(() => {
     const updateUrl = () => {
       setTruncatedUrl(
-        window.innerWidth < 500 ? ShareUrl.slice(0, 18) + "..." : ShareUrl
+        window.innerWidth < 500 ? ShareUrl.slice(0, 25) + "..." : ShareUrl
       );
     };
 
