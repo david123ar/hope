@@ -5,6 +5,7 @@ import { imageData } from "@/data/imageData";
 import "./signmodal.css";
 import { useRouter } from "next/navigation";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import Link from "next/link";
 
 const getRandomImage = () => {
   const categories = Object.keys(imageData.hashtags);
@@ -124,10 +125,56 @@ const SignInSignUpModal = (props) => {
               )}
               alt="Profile"
               className="profile-avatar"
-            />
-            <button onClick={handleSignOut} disabled={loading}>
-              {loading ? "Signing Out..." : "Sign Out"}
-            </button>
+            />{" "}
+            {props.landing ? (
+              <Link
+                href="/home"
+                style={{
+                  backgroundColor: "#00f2fe",
+                  color: "#0f172a",
+                  padding: "10px 20px",
+                  borderRadius: "8px",
+                  fontWeight: 600,
+                  textDecoration: "none",
+                  transition: "all 0.2s ease-in-out",
+                  display: "inline-block",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#00e0e0")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#00f2fe")
+                }
+              >
+                Start Earning
+              </Link>
+            ) : (
+              <button
+                onClick={handleSignOut}
+                disabled={loading}
+                style={{
+                  backgroundColor: "#00f2fe",
+                  color: "#0f172a",
+                  padding: "10px 20px",
+                  borderRadius: "8px",
+                  fontWeight: 600,
+                  border: "none",
+                  cursor: loading ? "not-allowed" : "pointer",
+                  opacity: loading ? 0.7 : 1,
+                  transition: "all 0.2s ease-in-out",
+                }}
+                onMouseEnter={(e) => {
+                  if (!loading)
+                    e.currentTarget.style.backgroundColor = "#00e0e0";
+                }}
+                onMouseLeave={(e) => {
+                  if (!loading)
+                    e.currentTarget.style.backgroundColor = "#00f2fe";
+                }}
+              >
+                {loading ? "Signing Out..." : "Sign Out"}
+              </button>
+            )}
           </>
         ) : (
           <form

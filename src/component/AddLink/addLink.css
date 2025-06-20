@@ -506,7 +506,7 @@
   gap: 14px;
   box-shadow: 0 4px 15px rgba(0, 242, 254, 0.05);
   transition: all 0.3s ease;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .add-box:hover {
@@ -581,7 +581,7 @@
 
 /* Add Trigger */
 .add-trigger {
-  margin-top: 24px;
+  margin-top: 10px;
   width: 80%;
   padding: 16px;
   border-radius: 20px;
@@ -605,16 +605,17 @@
 
 /* Link List Container */
 .links-wrapper {
-  margin-top: 30px;
+  margin-top: 10px;
   width: 80%;
   padding: 0 10px;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  height: 400px;
+  height: 330px;
   overflow-y: auto;
   box-sizing: border-box; /* Ensure padding doesn't affect width */
 }
+
 
 .links-wrapper::-webkit-scrollbar {
   width: 6px;
@@ -840,6 +841,10 @@
   font-weight: 700;
 }
 
+.fiiter {
+  display: block;
+}
+
 @media (max-width: 1000px) {
   .oit-3 {
     display: none;
@@ -950,8 +955,11 @@
   .links-wrapper {
     width: 100%;
     padding: 0;
+    margin-bottom: 70px;
   }
-
+  .fiiter {
+    display: none;
+  }
   /* Visibility toggle */
 }
 

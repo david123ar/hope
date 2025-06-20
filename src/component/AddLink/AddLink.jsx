@@ -536,7 +536,7 @@ const AddLink = (props) => {
             <div className="morre" onClick={() => setShowModal(true)}>
               <IoIosMore />
             </div>
-          </div>
+          </div> 
           <div className="container">
             {isAdding ? (
               <div className="add-box">
@@ -573,6 +573,12 @@ const AddLink = (props) => {
                 <span className="add-text">Add new Link</span>
               </div>
             )}
+
+            <Share
+              ShareUrl={`https://biolynk.shoko.fun/${session?.user?.id}${
+                props.refer ? `?refer=${props.refer}` : ``
+              }`}
+            />
 
             {!isAdding && links.length < 1 && (
               <div className="no-links-box" onClick={handleAddReferralLink}>
@@ -622,22 +628,6 @@ const AddLink = (props) => {
                 </DndContext>
               </div>
             )}
-            <div
-              style={{
-                position: "sticky",
-                bottom: 70,
-                // background: "#fff", // or your theme background
-                zIndex: 1000,
-                padding: "1rem",
-                borderTop: "1px solid #ccc", // optional
-              }}
-            >
-              <Share
-                ShareUrl={`https://biolynk.shoko.fun/${session?.user?.id}${
-                  props.refer ? `?refer=${props.refer}` : `?refer=weebhideout`
-                }`}
-              />
-            </div>
           </div>
         </div>
 
@@ -729,13 +719,15 @@ const AddLink = (props) => {
           </div>
           <Share
             ShareUrl={`https://biolynk.shoko.fun/${session?.user?.id}${
-              props.refer ? `?refer=${props.refer}` : `?refer=weebhideout`
+              props.refer ? `?refer=${props.refer}` : ``
             }`}
           />
         </div>
       </div>
       <BottomNavBar />
-      <Footer />
+      <div className="fiiter">
+        <Footer />
+      </div>
     </>
   );
 };

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Share.css";
 import share from "../../../public/share.gif";
 import Image from "next/image";
@@ -78,6 +78,20 @@ export default function Share({ ShareUrl, arise }) {
     </Component>
   );
 
+  const [truncatedUrl, setTruncatedUrl] = useState(ShareUrl);
+
+  useEffect(() => {
+    const updateUrl = () => {
+      setTruncatedUrl(
+        window.innerWidth < 500 ? ShareUrl.slice(0, 18) + "..." : ShareUrl
+      );
+    };
+
+    updateUrl(); // Run once on load
+    window.addEventListener("resize", updateUrl);
+    return () => window.removeEventListener("resize", updateUrl);
+  }, [ShareUrl]);
+
   return (
     <>
       <div className="share-app">
@@ -86,31 +100,49 @@ export default function Share({ ShareUrl, arise }) {
           alt="Share Anime"
           className="w-[60px] h-auto rounded-full max-[1024px]:w-[40px]"
         /> */}
+
         <div className="btnio">
           <div className="secoi">
-            Share your
-            <span className="primary">
-              {arise || process.env.NEXT_PUBLIC_SITE_NAME || "Animoon"}
-            </span>
-            to Social Media
+            <p style={{ fontSize: "1rem", color: "#fff", marginBottom: "8px" }}>
+              Copy the link below and add it to your{" "}
+              <span style={{ color: "#00f2fe", fontWeight: 500 }}>
+                Instagram bio
+              </span>{" "}
+              to{" "}
+              <span style={{ color: "#22c55e", fontWeight: 600 }}>
+                start earning
+              </span>
+            </p>
+            <code
+              style={{
+                display: "block",
+                backgroundColor: "#1e293b",
+                color: "#00f2fe",
+                borderRadius: "8px",
+                fontSize: "0.9rem",
+                wordBreak: "break-all",
+              }}
+            >
+              {truncatedUrl}
+            </code>
           </div>
         </div>
         <div className="btnio">
           <button onClick={handleCopy} className="copy-btn">
             {copied ? (
               <>
-                <MdCheckCircle size={22} />
+                <MdCheckCircle />
                 <span className="button-text large-screen-only">Copied</span>
               </>
             ) : (
               <>
-                <MdContentCopy size={22} />
+                <MdContentCopy />
                 <span className="button-text large-screen-only">Copy</span>
               </>
             )}{" "}
           </button>
           <button onClick={() => setOpen(true)} className="share-btn">
-            <FaShareAlt size={20} />
+            <FaShareAlt />
             <span className="button-text large-screen-only">Share</span>
           </button>
         </div>

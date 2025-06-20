@@ -37,8 +37,7 @@
 .secoi {
   color: #fff;
   font-weight: 400;
-
-} 
+}
 
 /* Buttons */
 .copy-btn,
@@ -48,7 +47,7 @@
   padding: 8px 12px;
   border-radius: 8px;
   color: white !important;
-  cursor: pointer; 
+  cursor: pointer;
   transition: 0.2s;
   display: flex;
   align-items: center;
@@ -318,14 +317,17 @@
 
 .copy-btn,
 .share-btn {
-  cursor: pointer;
-  border: none;
-  background: none;
-  color: white;
+  background-color: #273549 !important;
+  border: 1px solid transparent;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: white !important;
+  cursor: pointer; 
+  transition: 0.2s;
   display: flex;
   align-items: center;
-  gap: 0.3rem;
-  font-weight: 600;
+  gap: 6px;
+  font-size: 21px;
 }
 
 .copy-btn:hover,
@@ -507,6 +509,11 @@
 }
 
 @media screen and (max-width: 430px) {
+  .copy-btn,
+  .share-btn {
+    font-size: 17px;
+    padding: 5px 8px;
+  }
   .share-grid {
     gap: 0.7rem;
   }
