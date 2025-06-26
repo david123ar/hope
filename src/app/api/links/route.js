@@ -7,7 +7,7 @@ import { randomUUID } from "crypto";
 // POST: Add a new link and ensure default design exists
 export async function POST(request) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
+  if (!session?.user?.username) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -18,13 +18,13 @@ export async function POST(request) {
     }
 
     const db = await connectDB();
-    const users = db.collection("links");
+    const links = db.collection("links");
 
     // Ensure user document has default design
-    const existingUser = await users.findOne({ _id: session.user.id });
+    const existingUser = await links.findOne({ _id: session.user.username });
     if (!existingUser?.design) {
-      await users.updateOne(
-        { _id: session.user.id },
+      await links.updateOne(
+        { _id: session.user.username },
         { $set: { design: "/done.jpg" } },
         { upsert: true }
       );
@@ -38,8 +38,8 @@ export async function POST(request) {
       position: Date.now(),
     };
 
-    await users.updateOne(
-      { _id: session.user.id },
+    await links.updateOne(
+      { _id: session.user.username },
       { $push: { links: link } },
       { upsert: true }
     );
@@ -53,7 +53,7 @@ export async function POST(request) {
 // DELETE: Remove a link by id
 export async function DELETE(request) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
+  if (!session?.user?.username) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -62,7 +62,7 @@ export async function DELETE(request) {
     const db = await connectDB();
 
     await db.collection("links").updateOne(
-      { _id: session.user.id },
+      { _id: session.user.username },
       { $pull: { links: { id } } }
     );
 
@@ -75,7 +75,7 @@ export async function DELETE(request) {
 // PUT: Update a specific field of a specific link
 export async function PUT(request) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
+  if (!session?.user?.username) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -84,7 +84,7 @@ export async function PUT(request) {
     const db = await connectDB();
 
     await db.collection("links").updateOne(
-      { _id: session.user.id, "links.id": id },
+      { _id: session.user.username, "links.id": id },
       { $set: { [`links.$.${field}`]: value } }
     );
 
@@ -97,13 +97,13 @@ export async function PUT(request) {
 // GET: Get all links sorted by position + design
 export async function GET() {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
+  if (!session?.user?.username) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
     const db = await connectDB();
-    const doc = await db.collection("links").findOne({ _id: session.user.id });
+    const doc = await db.collection("links").findOne({ _id: session.user.username });
 
     const sortedLinks = doc?.links?.sort((a, b) => a.position - b.position) || [];
     const design = doc?.design || "/done.jpg";
@@ -117,7 +117,7 @@ export async function GET() {
 // PATCH: Save selected design
 export async function PATCH(request) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
+  if (!session?.user?.username) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -129,7 +129,7 @@ export async function PATCH(request) {
 
     const db = await connectDB();
     await db.collection("links").updateOne(
-      { _id: session.user.id },
+      { _id: session.user.username },
       { $set: { design } },
       { upsert: true }
     );

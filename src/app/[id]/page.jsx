@@ -1,10 +1,12 @@
 import BioClient from "@/component/BioClient/BioClient";
 import { connectDB } from "@/lib/mongoClient";
-import { ObjectId } from "mongodb";
 
+// Metadata
 export async function generateMetadata({ params }) {
   const db = await connectDB();
-  const userDoc = await db.collection("users").findOne({ _id: new ObjectId(params.id) });
+  const param = await params;
+
+  const userDoc = await db.collection("users").findOne({ username: param.id });
 
   if (!userDoc) {
     return {
@@ -19,13 +21,14 @@ export async function generateMetadata({ params }) {
   };
 }
 
-
+// Page
 export default async function BioPage({ params }) {
   const db = await connectDB();
-  const userId = params.id;
+  const param = await params;
+  const username = param.id;
 
-  // Fetch user document
-  const userDoc = await db.collection("users").findOne({ _id: new ObjectId(userId) });
+  // Get user by username
+  const userDoc = await db.collection("users").findOne({ username });
 
   if (!userDoc) {
     return <div>User not found</div>;
@@ -40,29 +43,31 @@ export default async function BioPage({ params }) {
     referredBy: userDoc.referredBy || null,
   };
 
-  // Fetch the user's own publisher doc
-  const publisherDoc = await db.collection("publishers").findOne({ _id: new ObjectId(userId) });
+  // Get publisher by username (since now _id = username in publishers)
+  const publisherDoc = await db
+    .collection("publishers")
+    .findOne({ _id: username });
   const publisher = publisherDoc
     ? {
-        id: publisherDoc._id.toString(),
+        id: publisherDoc._id,
         email: publisherDoc.email,
-        username: publisherDoc.username,
+        username: publisherDoc.username || username,
         adUnit: publisherDoc.adUnit,
         joinedAt: publisherDoc.joinedAt,
       }
     : null;
 
-  // Fetch referredBy publisher doc (if exists)
+  // Referred publisher (if exists)
   let referredPublisher = null;
-  if (userDoc.referredBy) {
+  if (user.referredBy) {
     const referredDoc = await db
       .collection("publishers")
-      .findOne({ _id: new ObjectId(userDoc.referredBy) });
+      .findOne({ _id: user.referredBy });
 
     if (referredDoc) {
       referredPublisher = {
-        id: referredDoc._id.toString(),
-        username: referredDoc.username,
+        id: referredDoc._id,
+        username: referredDoc.username || user.referredBy,
         email: referredDoc.email,
         adUnit: referredDoc.adUnit,
         joinedAt: referredDoc.joinedAt,
@@ -70,8 +75,8 @@ export default async function BioPage({ params }) {
     }
   }
 
-  // Fetch links
-  const linksDoc = await db.collection("links").findOne({ _id: userId });
+  // Get links and design
+  const linksDoc = await db.collection("links").findOne({ _id: username });
   const links = linksDoc?.links || [];
   const design = linksDoc?.design || "";
 
@@ -79,7 +84,7 @@ export default async function BioPage({ params }) {
     <BioClient
       user={user}
       publisher={publisher}
-      referredPublisher={referredPublisher} // ✅ Pass separately
+      referredPublisher={referredPublisher}
       links={links}
       design={design}
     />

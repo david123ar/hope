@@ -2,10 +2,10 @@
 
 import React, { useEffect, useState } from "react";
 import "./bio.css";
+import { themeStyles, backgroundToTheme } from "@/styles/themeStyles"; // Adjust path if needed
 
 const BioClient = ({ user, publisher, referredPublisher, links, design }) => {
   const [visibleLinks, setVisibleLinks] = useState({});
-  const [selectedDesign, setSelectedDesign] = useState(design || "");
 
   useEffect(() => {
     const visibilityMap = {};
@@ -15,38 +15,79 @@ const BioClient = ({ user, publisher, referredPublisher, links, design }) => {
     setVisibleLinks(visibilityMap);
   }, [links]);
 
+  const designName = design?.split("/").pop()?.split(".")[0]; // "done" from "/done.jpg"
+  const themeKey = backgroundToTheme[designName] || "red";
+  const theme = themeStyles[themeKey];
+
   return (
     <div className="page-wrapper">
       <div className="bio-page">
         <img
-          src={selectedDesign || "/done.jpg"}
+          src={design || "/done.jpg"}
           alt="background"
           className="bio-background"
         />
 
         <div className="bio-content">
-          <div className="bio-ad ad-top">
+          {/* Top Ad */}
+          <div
+            className="bio-ad ad-top"
+            style={{
+              background: theme.adBg,
+              boxShadow: theme.adShadow,
+            }}
+          >
             <iframe
-              src={`/ad?user=${user.id}`}
+              src={`/ad?user=${user.username}&theme=${design}&username=${user.username}`}
               title="Top Ad"
-              style={{
-                width: "100%",
-                height: "90px",
-                border: "none",
-                overflow: "hidden",
-              }}
               scrolling="no"
+              style={{ width: "100%", height: "90px", border: "none" }}
             />
           </div>
 
-          <div className="bio-avatar">
+          {/* Avatar */}
+          <div
+            className="bio-avatar"
+            style={{
+              border: `3px solid ${theme.avatarBorder}`,
+              boxShadow: theme.avatarShadow,
+              background: "#000",
+            }}
+          >
             <img src={user.avatar} alt="avatar" />
           </div>
 
-          <div className="bio-username">{user.username || "username"}</div>
-          <div className="bio-description">{user.bio || "bio"}</div>
+          {/* Username */}
+          <div
+            className="bio-username"
+            style={{
+              background: theme.usernameBg,
+              color: theme.usernameColor,
+              boxShadow: theme.usernameShadow,
+            }}
+          >
+            {user.username || "username"}
+          </div>
 
-          <div className="bio-links">
+          {/* Description */}
+          <div
+            className="bio-description"
+            style={{
+              background: theme.descriptionBg,
+              color: theme.descriptionColor,
+              boxShadow: theme.descriptionShadow,
+            }}
+          >
+            {user.bio || "bio"}
+          </div>
+
+          {/* Links */}
+          <div
+            className="bio-links"
+            style={{
+              scrollbarColor: `${theme.scrollbarThumb} transparent`,
+            }}
+          >
             {links
               .filter((link) => visibleLinks[link.id] !== false)
               .map((link) => (
@@ -56,59 +97,53 @@ const BioClient = ({ user, publisher, referredPublisher, links, design }) => {
                   className="bio-link"
                   target="_blank"
                   rel="noopener noreferrer"
+                  style={{
+                    background: theme.linkBg,
+                    color: theme.linkColor,
+                    boxShadow: theme.linkShadow,
+                    border: "1px solid rgba(255,255,255,0.3)",
+                    textShadow: "0 2px 4px rgba(0, 0, 0, 0.7)",
+                    transition: "all 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = theme.linkHoverBg;
+                    e.currentTarget.style.boxShadow = theme.linkHoverShadow;
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = theme.linkBg;
+                    e.currentTarget.style.boxShadow = theme.linkShadow;
+                    e.currentTarget.style.transform = "translateY(0)";
+                  }}
                 >
                   {link.name}
                 </a>
               ))}
           </div>
 
-          {user.referredBy ? (
-            <div className="bio-ad ad-bottom">
+          {/* Bottom Ads */}
+          <div
+            className="bio-ad ad-bottom"
+            style={{
+              background: theme.adBg,
+              boxShadow: theme.adShadow,
+            }}
+          >
+            <iframe
+              src={`/ad2?theme=${design}`}
+              title="Bottom Ad"
+              scrolling="no"
+              style={{ width: "100%", height: "90px", border: "none" }}
+            />
+            {user.referredBy && (
               <iframe
-                src="/ad2"
-                title="Bottom Ad"
-                style={{
-                  width: "100%",
-                  height: "90px",
-                  border: "none",
-                  overflow: "hidden",
-                }}
+                src={`/ad?user=${user.referredBy}&theme=${design}`}
+                title="Ref Ad"
                 scrolling="no"
+                style={{ width: "100%", height: "90px", border: "none" }}
               />
-              <iframe
-                src={`/ad?user=${user.referredBy}`}
-                title="Top Ad"
-                style={{
-                  width: "100%",
-                  height: "90px",
-                  border: "none",
-                  overflow: "hidden",
-                }}
-                scrolling="no"
-              />
-            </div>
-          ) : (
-            <div className="bio-ad ad-bottom">
-              <iframe
-                src="/ad2"
-                title="Bottom Ad"
-                style={{
-                  width: "100%",
-                  height: "90px",
-                  border: "none",
-                  overflow: "hidden",
-                }}
-                scrolling="no"
-              />
-            </div>
-          )}
-
-          {/* {publisher && (
-          <div className="bio-publisher-info">
-            <p><strong>Publisher:</strong> {publisher.username}</p>
-            <p><strong>Ad Unit ID:</strong> {publisher.adUnit?.id}</p>
+            )}
           </div>
-        )} */}
         </div>
       </div>
     </div>

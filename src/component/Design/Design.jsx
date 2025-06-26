@@ -1,11 +1,12 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import "./design.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
 import { useSession } from "next-auth/react";
 import Share from "../Share/Share";
+import { themeStyles, backgroundToTheme } from "@/styles/themeStyles";
 
 export default function Design(props) {
   const [showModal, setShowModal] = useState(false);
@@ -34,6 +35,11 @@ export default function Design(props) {
     "/design13.jpeg",
     "/design14.jpeg",
   ];
+
+  const activeTheme = useMemo(() => {
+    const filename = selectedlink.split("/").pop().split(".")[0]; // e.g., "design1"
+    return themeStyles[backgroundToTheme[filename]] || {};
+  }, [selectedlink]);
 
   useEffect(() => {
     if (session?.user) {
@@ -88,6 +94,7 @@ export default function Design(props) {
     <>
       <Navbar />
       <div className="oit">
+        {/* LEFT SIDE (DESIGN PICKER) */}
         <div className={`oit-in ${isView ? "hidde" : "activa"}`}>
           <div className="otil">
             <div className="oit-tip">Designs</div>
@@ -98,7 +105,7 @@ export default function Design(props) {
             <div className="outii" onClick={() => setIsView(true)}>
               <div className="out-lit">
                 <FaEye />
-              </div>{" "}
+              </div>
               <div className="out-lit">View</div>
             </div>
           </div>
@@ -112,7 +119,7 @@ export default function Design(props) {
               >
                 <img
                   src={bg}
-                  alt={`design-${index}`}
+                  alt={`design-${index + 1}`}
                   className="background-image"
                 />
                 <div className="text-over">
@@ -127,13 +134,14 @@ export default function Design(props) {
               </div>
             ))}
             <Share
-              ShareUrl={`https://biolynk.shoko.fun/${session?.user?.id}${
+              ShareUrl={`https://biolynk.shoko.fun/${session?.user?.username}${
                 props.refer ? `?refer=${props.refer}` : `?refer=weebhideout`
               }`}
             />
           </div>
         </div>
 
+        {/* RIGHT SIDE (PREVIEW) */}
         <div className={`oit-3 ${isView ? "activa" : "hidde"}`}>
           <div className="otil">
             <div className="oit-tip">Preview</div>
@@ -158,9 +166,15 @@ export default function Design(props) {
 
             <div className="text-over">
               <div className="banner-wrapper">
-                <div className="banner-ad">
+                <div
+                  className="banner-ad"
+                  style={{
+                    backgroundColor: activeTheme.adBg,
+                    boxShadow: activeTheme.adShadow,
+                  }}
+                >
                   <iframe
-                    src={`/ad?user=${session?.user?.id}`}
+                    src={`/ad?user=${session?.user?.id}&username=${session?.user?.username}&theme=${selectedlink}`}
                     title="Ad Banner"
                     style={{
                       width: "100%",
@@ -172,21 +186,65 @@ export default function Design(props) {
                   />
                 </div>
 
-                <div className="poster">
+                <div
+                  className="poster"
+                  style={{
+                    borderColor: activeTheme.avatarBorder,
+                    boxShadow: activeTheme.avatarShadow,
+                  }}
+                >
                   <img src={newAvatar} alt="poster" />
                 </div>
-                <div className="user">{user || "username"}</div>
-                <div className="bio">{bio || "bio"}</div>
+
+                <div
+                  className="user"
+                  style={{
+                    background: activeTheme.usernameBg,
+                    color: activeTheme.usernameColor,
+                    textShadow: activeTheme.usernameShadow,
+                  }}
+                >
+                  {user || "username"}
+                </div>
+
+                <div
+                  className="bio"
+                  style={{
+                    background: activeTheme.descriptionBg,
+                    color: activeTheme.descriptionColor,
+                    textShadow: activeTheme.descriptionShadow,
+                  }}
+                >
+                  {bio || "bio"}
+                </div>
+
                 <div className="linko">
                   {links
                     .filter((link) => visibleLinks[link.id] !== false)
-                    .map((link, index) => (
-                      <div key={index}>
+                    .map((link) => (
+                      <div key={link.id}>
                         <a
                           href={link.url}
                           className="link"
                           target="_blank"
                           rel="noopener noreferrer"
+                          style={{
+                            background: activeTheme.linkBg,
+                            color: activeTheme.linkColor,
+                            boxShadow: activeTheme.linkShadow,
+                          }}
+                          onMouseOver={(e) => {
+                            e.currentTarget.style.background =
+                              activeTheme.linkHoverBg;
+                            e.currentTarget.style.boxShadow =
+                              activeTheme.linkHoverShadow;
+                          }}
+                          onMouseOut={(e) => {
+                            e.currentTarget.style.background =
+                              activeTheme.linkBg;
+                            e.currentTarget.style.boxShadow =
+                              activeTheme.linkShadow;
+                          }}
                         >
                           {link.name}
                         </a>
@@ -195,9 +253,15 @@ export default function Design(props) {
                 </div>
               </div>
 
-              <div className="banner-ad2">
+              <div
+                className="banner-ad2"
+                style={{
+                  backgroundColor: activeTheme.adBg,
+                  boxShadow: activeTheme.adShadow,
+                }}
+              >
                 <iframe
-                  src="/ad"
+                  src={`/ad2?theme=${selectedlink}`}
                   title="Ad Banner"
                   style={{
                     width: "100%",
@@ -212,7 +276,7 @@ export default function Design(props) {
           </div>
 
           <Share
-            ShareUrl={`https://biolynk.shoko.fun/${session?.user?.id}${
+            ShareUrl={`https://biolynk.shoko.fun/${session?.user?.username}${
               props.refer ? `?refer=${props.refer}` : `?refer=weebhideout`
             }`}
           />

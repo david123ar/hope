@@ -1,16 +1,34 @@
 "use client";
 import Script from "next/script";
 import React, { useEffect, useState } from "react";
+import { themeStyles, backgroundToTheme } from "@/styles/themeStyles";
 
 const Page = () => {
   const [adVisible, setAdVisible] = useState(false);
   const [userId, setUserId] = useState(null);
+  const [username, setUsername] = useState("this creator");
   const [adUnit, setAdUnit] = useState(null);
+  const [themeKey, setThemeKey] = useState("red"); // ✅ Default to "red"
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const uid = params.get("user");
-    setUserId(uid);
+    const themeParam = params.get("theme");
+    const uname = params.get("username");
+
+    if (uid) setUserId(uid);
+    if (uname) setUsername(uname);
+
+    if (themeParam) {
+      const cleanedTheme = themeParam
+        .replace("/", "")
+        .replace(".jpg", "")
+        .replace(".jpeg", "");
+      const themeName = backgroundToTheme[cleanedTheme] || cleanedTheme;
+
+      // ✅ fallback to red if invalid
+      setThemeKey(themeName in themeStyles ? themeName : "red");
+    }
 
     if (!uid) return;
 
@@ -32,22 +50,25 @@ const Page = () => {
         }
       }
     }, 2000);
-
     return () => clearTimeout(timeout);
   }, [adUnit]);
+
+  const activeTheme = themeStyles[themeKey] || themeStyles["red"]; // ✅ guaranteed safe
 
   return (
     <div
       style={{
         margin: 0,
         padding: 0,
-        backgroundColor: "#1a1a1a",
+        backgroundColor: activeTheme.adBg,
         width: "100%",
         height: "90px",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         overflow: "hidden",
+        boxShadow: activeTheme.adShadow,
+        position: "relative",
       }}
     >
       {adUnit && (
@@ -71,23 +92,37 @@ const Page = () => {
         </>
       )}
 
-      {!adVisible && (
+      {!adVisible && adUnit && (
         <a
-          href={adUnit?.clickUrl || "#"}
+          href={adUnit.clickUrl || "#"}
           target="_blank"
           rel="noopener noreferrer"
           style={{
             width: "100%",
             height: "100%",
-            color: "#fdbd73",
+            color: activeTheme.linkColor,
             fontSize: "14px",
             fontWeight: "bold",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            textDecoration: "none",
+            background: activeTheme.linkBg,
+            boxShadow: activeTheme.linkShadow,
+            transition: "all 0.3s ease",
+          }}
+          onMouseOver={(e) => {
+            if (activeTheme.linkHoverBg)
+              e.currentTarget.style.background = activeTheme.linkHoverBg;
+            if (activeTheme.linkHoverShadow)
+              e.currentTarget.style.boxShadow = activeTheme.linkHoverShadow;
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.background = activeTheme.linkBg;
+            e.currentTarget.style.boxShadow = activeTheme.linkShadow;
           }}
         >
-          Click to support Henpro 💖
+          Click to support {username} 💖
         </a>
       )}
     </div>

@@ -4,7 +4,11 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { imageData } from "@/data/imageData";
 import "./signmodal.css";
 import { useRouter } from "next/navigation";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import {
+  AiOutlineEye,
+  AiOutlineEyeInvisible,
+  AiOutlineClose,
+} from "react-icons/ai";
 import Link from "next/link";
 
 const getRandomImage = () => {
@@ -40,31 +44,42 @@ const SignInSignUpModal = (props) => {
     router.refresh();
   };
 
-  const handleSignUp = async () => {
-    setError("");
-    setLoading(true);
+const handleSignUp = async () => {
+  setError("");
+  setLoading(true);
 
-    const payload = {
-      email,
-      password,
-      username,
-      avatar,
-      ...(typeof props.refer === "string" &&
-        props.refer.length > 0 && { refer: props.refer }),
-    };
-
-    const res = await fetch("/api/auth/signup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    const data = await res.json();
+  // ✅ Validate username format
+  if (!/^[a-zA-Z0-9_]{3,30}$/.test(username)) {
+    setError(
+      "Username must be 3–30 characters and contain only letters, numbers, or underscores."
+    );
     setLoading(false);
-    if (!res.ok) return setError(data.message);
+    return;
+  }
 
-    await signIn("credentials", { email, password, redirect: false });
+  // ✅ Validate refer (if passed)
+  const payload = {
+    email,
+    password,
+    username,
+    avatar,
+    ...(props.refer &&
+      /^[a-zA-Z0-9_]{3,30}$/.test(props.refer) && { refer: props.refer }),
   };
+
+  const res = await fetch("/api/auth/signup", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await res.json();
+  setLoading(false);
+  if (!res.ok) return setError(data.message);
+
+  await signIn("credentials", { email, password, redirect: false });
+};
+
 
   const handleSignIn = async () => {
     setError("");
@@ -111,10 +126,20 @@ const SignInSignUpModal = (props) => {
       <div
         className="modal-content"
         style={{
+          position: "relative",
           transform: props.logIsOpen ? "translateX(0px)" : "translateX(1000px)",
         }}
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Cross Button */}
+        <button
+          onClick={() => props.setLogIsOpen(false)}
+          className="close-button"
+          aria-label="Close"
+        >
+          <AiOutlineClose />
+        </button>
+
         {session ? (
           <>
             <p className="heddio">Welcome, {session.user.username}!</p>
@@ -125,7 +150,7 @@ const SignInSignUpModal = (props) => {
               )}
               alt="Profile"
               className="profile-avatar"
-            />{" "}
+            />
             {props.landing ? (
               <Link
                 href="/home"

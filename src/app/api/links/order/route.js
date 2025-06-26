@@ -5,7 +5,9 @@ import { connectDB } from "@/lib/mongoClient";
 
 export async function PUT(request) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
+
+  // ✅ Use username instead of id
+  if (!session?.user?.username) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -13,19 +15,21 @@ export async function PUT(request) {
     const { orderedIds } = await request.json();
     const db = await connectDB();
 
-    const userDoc = await db.collection("links").findOne({ _id: session.user.id });
+    // ✅ Query by username _id
+    const userDoc = await db.collection("links").findOne({ _id: session.user.username });
+
     if (!userDoc) {
       return NextResponse.json({ error: "No links found" }, { status: 404 });
     }
 
-    // Update positions based on orderedIds
+    // Re-map and reorder links
     const updatedLinks = userDoc.links.map(link => {
       const match = orderedIds.find(l => l.id === link.id);
       return match ? { ...link, position: match.position } : link;
     });
 
     await db.collection("links").updateOne(
-      { _id: session.user.id },
+      { _id: session.user.username },
       { $set: { links: updatedLinks } }
     );
 

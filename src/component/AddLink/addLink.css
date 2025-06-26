@@ -4,6 +4,7 @@
   justify-content: center;
   padding-top: 65px;
   flex-wrap: wrap;
+  height: 100%;
   min-height: calc(100vh - 65px);
 }
 
@@ -246,11 +247,8 @@
   align-items: center;
   justify-content: flex-start;
   border-right: 1px solid #00f2fe44;
-
-  height: calc(100vh - 65px); /* full height minus top offset */
-  /* Remove margin-top, it's already accounted for in height */
-  /* overflow-y: auto; */ /* Uncomment if scrolling is needed */
-  box-sizing: border-box; /* Align content like .oit */
+  box-sizing: border-box;
+  /* Remove fixed height */
 }
 
 .oit-2 {
@@ -615,7 +613,6 @@
   overflow-y: auto;
   box-sizing: border-box; /* Ensure padding doesn't affect width */
 }
-
 
 .links-wrapper::-webkit-scrollbar {
   width: 6px;

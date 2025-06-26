@@ -1,27 +1,10 @@
-/* GLOBAL RESET */
-/* *,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  overflow-x: hidden;
-} */
-
 /* PAGE WRAPPER */
 .page-wrapper {
   width: 100%;
-  /* max-width: 100%; */
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  background-color: black;
   overflow-x: hidden;
   position: relative;
 }
@@ -44,7 +27,6 @@ body {
   height: 100%;
   object-fit: cover;
   z-index: 0;
-  filter: brightness(0.6);
   pointer-events: none;
 }
 
@@ -68,41 +50,36 @@ body {
   height: 100px;
   border-radius: 50%;
   overflow: hidden;
-  border: 3px solid white;
-  box-shadow: 0 0 10px white;
-  background: black;
 }
 
+/* AVATAR IMAGE */
 .bio-avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-/* USERNAME & BIO */
+/* USERNAME */
 .bio-username {
   font-size: 18px;
   font-weight: bold;
-  background: rgba(0, 0, 0, 0.5);
-  padding: 6px 12px;
-  border-radius: 8px;
-  color: white;
+  padding: 4px 10px;
+  border-radius: 6px;
   text-align: center;
   word-break: break-word;
 }
 
+/* BIO DESCRIPTION */
 .bio-description {
   font-size: 14px;
   text-align: center;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 6px 12px;
-  border-radius: 8px;
+  padding: 4px 10px;
+  border-radius: 6px;
   max-width: 90%;
-  color: white;
   word-break: break-word;
 }
 
-/* LINKS */
+/* LINKS WRAPPER */
 .bio-links {
   width: 100%;
   max-width: 100%;
@@ -116,12 +93,10 @@ body {
   overflow-x: hidden;
 }
 
-/* Scrollbar Styling */
 .bio-links::-webkit-scrollbar {
   width: 6px;
 }
 .bio-links::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3);
   border-radius: 3px;
 }
 .bio-links::-webkit-scrollbar-track {
@@ -133,23 +108,16 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 60px;
+  height: 55px;
   width: 100%;
-  padding: 10px;
+  padding: 8px 14px;
   text-decoration: none;
-  background: rgba(255, 255, 255, 0.12);
-  color: white;
-  font-size: 14px;
-  font-weight: 500;
-  border-radius: 12px;
-  border: 1px solid white;
-  backdrop-filter: blur(6px);
-  transition: all 0.3s ease;
-}
-
-.bio-link:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
+  flex-shrink: 0;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 18px;
+  border: 1px solid transparent;
+  transition: all 0.25s ease;
 }
 
 /* ADS */
@@ -157,13 +125,11 @@ body {
   width: 100%;
   max-width: 100%;
   height: 90px;
-  background: #2a2a2a;
   border-radius: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  box-shadow: 0 4px 10px rgba(253, 189, 115, 0.3);
   z-index: 10;
 }
 

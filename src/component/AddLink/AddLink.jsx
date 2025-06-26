@@ -536,7 +536,7 @@ const AddLink = (props) => {
             <div className="morre" onClick={() => setShowModal(true)}>
               <IoIosMore />
             </div>
-          </div> 
+          </div>
           <div className="container">
             {isAdding ? (
               <div className="add-box">
@@ -575,7 +575,7 @@ const AddLink = (props) => {
             )}
 
             <Share
-              ShareUrl={`https://biolynk.shoko.fun/${session?.user?.id}${
+              ShareUrl={`https://biolynk.shoko.fun/${session?.user?.username}${
                 props.refer ? `?refer=${props.refer}` : ``
               }`}
             />
@@ -662,7 +662,7 @@ const AddLink = (props) => {
                   aria-label="Advertisement banner"
                 >
                   <iframe
-                    src={`/ad?user=${session?.user?.id}`}
+                    src={`/ad?user=${session?.user?.id}&username=${session?.user?.username}&theme=${selectedLink}`}
                     title="Ad Banner"
                     style={{
                       width: "100%",
@@ -704,7 +704,7 @@ const AddLink = (props) => {
                 aria-label="Advertisement banner"
               >
                 <iframe
-                  src="/ad2"
+                  src={`/ad2?theme=${selectedLink}`}
                   title="Ad Banner"
                   style={{
                     width: "100%",

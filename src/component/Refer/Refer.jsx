@@ -6,7 +6,7 @@ import Navbar from "@/component/Navbar/Navbar";
 
 export default function ReferEarn() {
   const { data: session, status } = useSession();
-  const referralUrl = `http://localhost:3000/?ref=${session?.user?.id}`; // Replace dynamically as needed
+  const referralUrl = `https://biolynk.shoko.fun/?ref=${session?.user?.username}`; // Replace dynamically as needed
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {

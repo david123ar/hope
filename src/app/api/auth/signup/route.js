@@ -1,12 +1,13 @@
+import { NextResponse } from "next/server"; // ✅ Use NextResponse
 import { hash } from "bcryptjs";
 import { connectDB } from "@/lib/mongoClient";
 import { imageData } from "@/data/imageData";
 import { adUnits } from "@/ads/adScripts";
-import { ObjectId } from "mongodb";
 
 const getRandomImage = () => {
   const categories = Object.keys(imageData.hashtags);
-  const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+  const randomCategory =
+    categories[Math.floor(Math.random() * categories.length)];
   const images = imageData.hashtags[randomCategory].images;
   return images[Math.floor(Math.random() * images.length)];
 };
@@ -25,7 +26,9 @@ const getRandomUnassignedAdUnit = async (publishers) => {
     throw new Error("No available ad units left to assign.");
   }
 
-  return unassignedAdUnits[Math.floor(Math.random() * unassignedAdUnits.length)];
+  return unassignedAdUnits[
+    Math.floor(Math.random() * unassignedAdUnits.length)
+  ];
 };
 
 export async function POST(req) {
@@ -37,24 +40,37 @@ export async function POST(req) {
     const { email, username, password, refer } = await req.json();
 
     if (!email || !username || !password) {
-      return Response.json({ message: "All fields are required" }, { status: 400 });
+      return NextResponse.json(
+        { message: "All fields are required" },
+        { status: 400 }
+      );
     }
 
-    const existingUser = await users.findOne({ email });
+    if (!/^[a-zA-Z0-9_]{3,30}$/.test(username)) {
+      return NextResponse.json(
+        {
+          message:
+            "Username must be 3–30 characters and contain only letters, numbers, or underscores.",
+        },
+        { status: 400 }
+      );
+    }
+
+    const [existingUser, existingUsername] = await Promise.all([
+      users.findOne({ email }),
+      users.findOne({ username }),
+    ]);
     if (existingUser) {
-      return Response.json({ message: "Email already in use" }, { status: 400 });
+      return NextResponse.json({ message: "Email already in use" }, { status: 400 });
     }
-
-    const existingUsername = await users.findOne({ username });
     if (existingUsername) {
-      return Response.json({ message: "Username already taken" }, { status: 400 });
+      return NextResponse.json({ message: "Username already taken" }, { status: 400 });
     }
 
     const hashedPassword = await hash(password, 10);
     const avatar = getRandomImage();
     const timeOfJoining = new Date();
 
-    // Prepare user object
     const newUser = {
       email,
       username,
@@ -63,38 +79,41 @@ export async function POST(req) {
       timeOfJoining,
     };
 
-    // If refer is a valid ObjectId string, include it
-    if (typeof refer === "string" && ObjectId.isValid(refer)) {
-      newUser.referredBy = new ObjectId(refer);
+    if (typeof refer === "string" && /^[a-zA-Z0-9_]{3,30}$/.test(refer)) {
+      const referrer = await publishers.findOne({ _id: refer });
+      if (referrer) {
+        newUser.referredBy = refer;
+        await publishers.updateOne(
+          { _id: refer },
+          { $inc: { referralCount: 1 } }
+        );
+      }
     }
 
-    // Insert user and get inserted ID
     const userInsertResult = await users.insertOne(newUser);
-    const userId = userInsertResult.insertedId;
 
-    // Assign an ad unit
     const adUnit = await getRandomUnassignedAdUnit(publishers);
-
-    // Insert publisher with same ID
     await publishers.insertOne({
-      _id: userId,
+      _id: username,
       email,
-      username,
       adUnit,
       joinedAt: timeOfJoining,
     });
 
-    return Response.json(
+    return NextResponse.json(
       {
         message: "User registered successfully",
         avatar,
         adUnit,
-        userId,
+        userId: userInsertResult.insertedId,
         timeOfJoining,
       },
       { status: 201 }
     );
   } catch (error) {
-    return Response.json({ message: "Server Error", error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: "Server Error", error: error.message },
+      { status: 500 }
+    );
   }
 }
