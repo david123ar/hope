@@ -7,15 +7,15 @@ import { useEffect, useState } from "react";
 export default function LandingPage(props) {
   const [logIsOpen, setLogIsOpen] = useState(false);
   const [landing, setLanding] = useState(true);
+  const [username, setUsername] = useState("");
 
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   const sign = (sign) => {
     setLogIsOpen(sign);
   };
 
   useEffect(() => {
-    // This ensures session-based actions rerender as session updates
     console.log("Session updated:", session);
   }, [session]);
 
@@ -27,6 +27,21 @@ export default function LandingPage(props) {
     }
   };
 
+  const handleClaimClick = () => {
+    const trimmed = username.trim();
+    const isValidUsername = /^[a-zA-Z0-9_-]{3,32}$/.test(trimmed);
+
+    if (!isValidUsername) {
+      alert(
+        "Username must be 3–32 characters and contain only letters, numbers, underscores (_) or hyphens (-)."
+      );
+      return;
+    }
+
+    setLogIsOpen(true);
+    setLanding(true);
+  };
+
   return (
     <div>
       {logIsOpen && (
@@ -36,6 +51,7 @@ export default function LandingPage(props) {
           setLogIsOpen={setLogIsOpen}
           sign={sign}
           refer={props.refer}
+          username={username} // Pass username to modal
         />
       )}
       <div className="min-h-screen bg-[#0f172a] text-white flex flex-col items-center px-6 py-12">
@@ -50,18 +66,28 @@ export default function LandingPage(props) {
             stats — completely{" "}
             <span className="text-[#00f2fe] font-semibold">free</span>.
           </p>
-          <div
-            onClick={() => {
-              setLogIsOpen(true);
-              setLanding(true);
-            }}
-            className="mt-8 inline-block bg-[#00f2fe] hover:bg-[#00defe] text-black font-semibold py-3 px-8 rounded-full text-lg transition cursor-pointer"
-          >
-            Start Earning Now
+
+          {/* Enhanced Input + Button */}
+          <div className="mt-8 w-full max-w-md mx-auto">
+            <div className="flex w-full shadow-md rounded-full overflow-hidden border border-[#00f2fe]">
+              <input
+                type="text"
+                placeholder="Choose your username"
+                className="flex-1 px-5 py-3 bg-[#1e293b] text-white focus:outline-none placeholder-gray-400 border-none"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+              <button
+                onClick={handleClaimClick}
+                className="bg-[#00f2fe] hover:bg-[#00defe] text-black font-bold px-6 py-3 transition whitespace-nowrap"
+              >
+                Claim Your BioLynk
+              </button>
+            </div>
+            <p className="mt-2 text-sm text-gray-400 text-left">
+              This will be your unique biolynk page.
+            </p>
           </div>
-          <p className="mt-3 text-sm text-gray-400">
-            No fees. No setup. Just share your link.
-          </p>
         </div>
 
         {/* Benefits */}
@@ -97,17 +123,6 @@ export default function LandingPage(props) {
               <li>We run the ads. You get paid.</li>
             </ol>
           </div>
-        </div>
-
-        {/* Call to Action */}
-        <div
-          onClick={() => {
-            setLogIsOpen(true);
-            setLanding(true);
-          }}
-          className="mt-12 bg-[#00f2fe] hover:bg-[#00defe] text-black font-semibold py-3 px-10 rounded-full text-lg transition cursor-pointer"
-        >
-          Claim Your Free Monetized Page
         </div>
 
         {/* Footer Links */}
