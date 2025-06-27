@@ -7,6 +7,7 @@ import Footer from "../Footer/Footer";
 import { useSession } from "next-auth/react";
 import Share from "../Share/Share";
 import { themeStyles, backgroundToTheme } from "@/styles/themeStyles";
+import Link from "next/link";
 
 export default function Design(props) {
   const [showModal, setShowModal] = useState(false);
@@ -16,11 +17,11 @@ export default function Design(props) {
   const [visibleLinks, setVisibleLinks] = useState({});
   const [newAvatar, setNewAvatar] = useState("");
   const [links, setLinks] = useState([]);
-  const [selectedlink, setSelectedLink] = useState("/done.jpg");
+  const [selectedlink, setSelectedLink] = useState("/done.jpeg");
   const [isView, setIsView] = useState(false);
 
   const backgrounds = [
-    "/done.jpg",
+    "/done.jpeg",
     "/design1.jpeg",
     "/design2.jpeg",
     "/design3.jpeg",
@@ -275,11 +276,16 @@ export default function Design(props) {
             </div>
           </div>
 
-          <Share
-            ShareUrl={`https://biolynk.shoko.fun/${session?.user?.username}${
-              props.refer ? `?refer=${props.refer}` : `?refer=weebhideout`
+          <Link
+            href={`https://biolynk.shoko.fun/${session?.user?.username}${
+              props.refer ? `?refer=${props.refer}` : ``
             }`}
-          />
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block mt-5 bg-[#00f2fe] text-black font-semibold px-5 py-2 rounded-lg hover:bg-[#00d8e0] transition duration-300 ease-in-out"
+          >
+            Visit your biolynk
+          </Link>
         </div>
       </div>
       <Footer />

@@ -16,14 +16,14 @@ const BioClient = ({ user, publisher, referredPublisher, links, design }) => {
   }, [links]);
 
   const designName = design?.split("/").pop()?.split(".")[0]; // "done" from "/done.jpg"
-  const themeKey = backgroundToTheme[designName] || "red";
+  const themeKey = backgroundToTheme[designName] || "redWhiteBlack";
   const theme = themeStyles[themeKey];
 
   return (
     <div className="page-wrapper">
       <div className="bio-page">
         <img
-          src={design || "/done.jpg"}
+          src={design || "/done.jpeg"}
           alt="background"
           className="bio-background"
         />

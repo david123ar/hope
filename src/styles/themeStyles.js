@@ -255,22 +255,45 @@ export const themeStyles = {
     adBg: "#111111",
     adShadow: "0 4px 8px rgba(255, 255, 255, 0.1)",
   },
+  redWhiteBlack: {
+    avatarBorder: "#ffffff",
+    avatarShadow: "0 0 10px rgba(255, 255, 255, 0.6)",
+
+    usernameBg: "rgba(0, 0, 0, 0.5)",
+    usernameColor: "#ff4d4d",
+    usernameShadow: "0 1px 4px rgba(255, 0, 0, 0.5)",
+
+    descriptionBg: "rgba(255, 255, 255, 0.1)",
+    descriptionColor: "#000", // Light reddish-pink tint for readability and red feel
+    descriptionShadow: "0 1px 3px rgba(0, 0, 0, 0.4)",
+
+    linkBg: "linear-gradient(to right, #ff0000, #ffffff, #000000)",
+    linkHoverBg: "linear-gradient(to right, #ff4d4d, #f0f0f0, #1a1a1a)",
+    linkColor: "#000000",
+    linkShadow: "0 2px 10px rgba(255, 0, 0, 0.4)",
+    linkHoverShadow: "0 4px 15px rgba(255, 0, 0, 0.6)",
+
+    scrollbarThumb: "rgba(255, 0, 0, 0.4)",
+
+    adBg: "#1a1a1a",
+    adShadow: "0 4px 10px rgba(255, 255, 255, 0.1)",
+  },
 };
 
 // styles/backgroundToTheme.js
 export const backgroundToTheme = {
-  "done": "red",
-  "design1": "shinyOrangeGrey",
-  "design2": "blue",
-  "design3": "cyan",
-  "design4": "blackGrey",
-  "design5": "skyblue",
-  "design6": "blue",
-  "design8": "greenblack",
-  "design9": "yellowredblackskin",
-  "design10": "white",
-  "design11": "burntSkin",
-  "design12": "yellowwhiteblack",
-  "design13": "purpleblack",
-  "design14": "red",
+  done: "redWhiteBlack",
+  design1: "shinyOrangeGrey",
+  design2: "blue",
+  design3: "cyan",
+  design4: "blackGrey",
+  design5: "skyblue",
+  design6: "blue",
+  design8: "greenblack",
+  design9: "yellowredblackskin",
+  design10: "white",
+  design11: "burntSkin",
+  design12: "yellowwhiteblack",
+  design13: "purpleblack",
+  design14: "red",
 };

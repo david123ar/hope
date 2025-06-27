@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "react-hot-toast"; // ✅ import toaster
 
 // Load fonts
 const geistSans = Geist({
@@ -37,7 +38,7 @@ export const metadata = {
     siteName: "BioLynk",
     images: [
       {
-        url: "/og-image.jpg", // ✅ Place this image in the /public folder
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "BioLynk – Monetize Your Link",
@@ -51,7 +52,7 @@ export const metadata = {
     description:
       "Monetize your link in bio. 1 link. Built-in ads. Zero fees. Works for any platform: Instagram, YouTube, TikTok, more.",
     images: ["/og-image.jpg"],
-    creator: "@yourTwitterHandle", // Optional
+    creator: "@yourTwitterHandle",
   },
   icons: {
     icon: "/favicon.ico",
@@ -62,6 +63,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <Toaster position="top-right" toastOptions={{ duration: 4000 }} /> {/* ✅ Add toaster */}
         {children}
       </body>
     </html>

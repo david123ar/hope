@@ -203,7 +203,7 @@ const AddLink = (props) => {
   const [editingIndex, setEditingIndex] = useState(null);
   const [editingField, setEditingField] = useState(null); // "name" or "url"
   const [editingValue, setEditingValue] = useState("");
-  const [selectedLink, setSelectedLink] = useState("");
+  const [selectedLink, setSelectedLink] = useState("/done.jpeg");
 
   const activeTheme = useMemo(() => {
     const filename = selectedLink.split("/").pop().split(".")[0]; // e.g., "design1"
