@@ -40,7 +40,14 @@ export async function POST(request) {
 
     await links.updateOne(
       { _id: session.user.username },
-      { $push: { links: link } },
+      {
+        $push: {
+          links: {
+            $each: [link],
+            $position: 0, // Insert at top
+          },
+        },
+      },
       { upsert: true }
     );
 
@@ -94,7 +101,7 @@ export async function PUT(request) {
   }
 }
 
-// GET: Get all links sorted by position + design
+// GET: Get all links sorted by descending position + design
 export async function GET() {
   const session = await getServerSession(authOptions);
   if (!session?.user?.username) {
@@ -105,7 +112,8 @@ export async function GET() {
     const db = await connectDB();
     const doc = await db.collection("links").findOne({ _id: session.user.username });
 
-    const sortedLinks = doc?.links?.sort((a, b) => a.position - b.position) || [];
+    // 🔁 Sort in descending order so latest appears first
+    const sortedLinks = doc?.links?.sort((a, b) => b.position - a.position) || [];
     const design = doc?.design || "/done.jpg";
 
     return NextResponse.json({ links: sortedLinks, design });

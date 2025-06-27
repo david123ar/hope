@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "./addLink.css";
 import { HiPencil } from "react-icons/hi";
 import { IoIosMore, IoMdAdd } from "react-icons/io";
@@ -7,6 +7,7 @@ import { FiLink } from "react-icons/fi";
 import { AiOutlineHolder } from "react-icons/ai";
 import { GoPencil } from "react-icons/go";
 import { RiDeleteBin6Fill } from "react-icons/ri";
+import { themeStyles, backgroundToTheme } from "@/styles/themeStyles";
 
 import {
   DndContext,
@@ -31,6 +32,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { usePathname } from "next/navigation";
 import { imageData } from "@/data/imageData";
 import Share from "../Share/Share";
+import Link from "next/link";
 
 const SortableItem = ({
   id,
@@ -203,6 +205,11 @@ const AddLink = (props) => {
   const [editingValue, setEditingValue] = useState("");
   const [selectedLink, setSelectedLink] = useState("");
 
+  const activeTheme = useMemo(() => {
+    const filename = selectedLink.split("/").pop().split(".")[0]; // e.g., "design1"
+    return themeStyles[backgroundToTheme[filename]] || {};
+  }, [selectedLink]);
+
   useEffect(() => {
     const fetchLinks = async () => {
       try {
@@ -242,10 +249,10 @@ const AddLink = (props) => {
       name,
       url,
       visible: true,
-      position: links.length, // append to the end
+      position: Date.now(), // ✅ ensures it's latest
     };
 
-    setLinks((prev) => [...prev, newLink]);
+    setLinks((prev) => [newLink, ...prev]); // ✅ insert on top
     setVisibleLinks((prev) => ({ ...prev, [newLink.id]: true }));
     setName("");
     setUrl("");
@@ -371,17 +378,18 @@ const AddLink = (props) => {
     const newLinks = arrayMove(links, oldIndex, newIndex);
     setLinks(newLinks);
 
-    // Persist new positions
+    // Assign higher position to links at the top
+    const maxPosition = Date.now(); // use current timestamp
+    const orderedIds = newLinks.map((link, index) => ({
+      id: link.id,
+      position: maxPosition - index, // top gets highest value
+    }));
+
     try {
       await fetch("/api/links/order", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          orderedIds: newLinks.map((link, index) => ({
-            id: link.id,
-            position: index,
-          })),
-        }),
+        body: JSON.stringify({ orderedIds }),
       });
     } catch (err) {
       console.error("Error updating link order:", err);
@@ -646,9 +654,8 @@ const AddLink = (props) => {
             </div>
           </div>
           <div className="inn-1">
-            {/* <div className="absolute inset-0 z-10 bg-[url('https://i.postimg.cc/pVGY6RXd/thumb.png')] bg-repeat"></div> */}
             <img
-              src={selectedLink || "/done.jpg"}
+              src={selectedLink}
               alt="background"
               className="background-image"
             />
@@ -657,12 +664,13 @@ const AddLink = (props) => {
               <div className="banner-wrapper">
                 <div
                   className="banner-ad"
-                  role="banner"
-                  tabIndex={0}
-                  aria-label="Advertisement banner"
+                  style={{
+                    backgroundColor: activeTheme.adBg,
+                    boxShadow: activeTheme.adShadow,
+                  }}
                 >
                   <iframe
-                    src={`/ad?user=${session?.user?.id}&username=${session?.user?.username}&theme=${selectedLink}`}
+                    src={`/ad?user=${session?.user?.username}&username=${session?.user?.username}&theme=${selectedLink}`}
                     title="Ad Banner"
                     style={{
                       width: "100%",
@@ -674,21 +682,65 @@ const AddLink = (props) => {
                   />
                 </div>
 
-                <div className="poster">
+                <div
+                  className="poster"
+                  style={{
+                    borderColor: activeTheme.avatarBorder,
+                    boxShadow: activeTheme.avatarShadow,
+                  }}
+                >
                   <img src={newAvatar} alt="poster" />
                 </div>
-                <div className="user">{user || "username"}</div>
-                <div className="bio">{bio || "bio"}</div>
+
+                <div
+                  className="user"
+                  style={{
+                    background: activeTheme.usernameBg,
+                    color: activeTheme.usernameColor,
+                    textShadow: activeTheme.usernameShadow,
+                  }}
+                >
+                  {user || "username"}
+                </div>
+
+                <div
+                  className="bio"
+                  style={{
+                    background: activeTheme.descriptionBg,
+                    color: activeTheme.descriptionColor,
+                    textShadow: activeTheme.descriptionShadow,
+                  }}
+                >
+                  {bio || "bio"}
+                </div>
+
                 <div className="linko">
                   {links
-                    .filter((link) => visibleLinks[link.id] !== false) // only show visible links
-                    .map((link, index) => (
-                      <div key={index}>
+                    .filter((link) => visibleLinks[link.id] !== false)
+                    .map((link) => (
+                      <div key={link.id}>
                         <a
                           href={link.url}
                           className="link"
                           target="_blank"
                           rel="noopener noreferrer"
+                          style={{
+                            background: activeTheme.linkBg,
+                            color: activeTheme.linkColor,
+                            boxShadow: activeTheme.linkShadow,
+                          }}
+                          onMouseOver={(e) => {
+                            e.currentTarget.style.background =
+                              activeTheme.linkHoverBg;
+                            e.currentTarget.style.boxShadow =
+                              activeTheme.linkHoverShadow;
+                          }}
+                          onMouseOut={(e) => {
+                            e.currentTarget.style.background =
+                              activeTheme.linkBg;
+                            e.currentTarget.style.boxShadow =
+                              activeTheme.linkShadow;
+                          }}
                         >
                           {link.name}
                         </a>
@@ -699,9 +751,10 @@ const AddLink = (props) => {
 
               <div
                 className="banner-ad2"
-                role="banner"
-                tabIndex={0}
-                aria-label="Advertisement banner"
+                style={{
+                  backgroundColor: activeTheme.adBg,
+                  boxShadow: activeTheme.adShadow,
+                }}
               >
                 <iframe
                   src={`/ad2?theme=${selectedLink}`}
@@ -717,11 +770,21 @@ const AddLink = (props) => {
               </div>
             </div>
           </div>
-          <Share
+          {/* <Share
             ShareUrl={`https://biolynk.shoko.fun/${session?.user?.id}${
               props.refer ? `?refer=${props.refer}` : ``
             }`}
-          />
+          /> */}
+          <Link
+            href={`https://biolynk.shoko.fun/${session?.user?.username}${
+              props.refer ? `?refer=${props.refer}` : ``
+            }`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block mt-5 bg-[#00f2fe] text-black font-semibold px-5 py-2 rounded-lg hover:bg-[#00d8e0] transition duration-300 ease-in-out"
+          >
+            Visit your biolynk
+          </Link>
         </div>
       </div>
       <BottomNavBar />

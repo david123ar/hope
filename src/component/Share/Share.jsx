@@ -54,6 +54,8 @@ import {
   WhatsappShareButton,
   WorkplaceShareButton,
 } from "react-share";
+import Link from "next/link";
+import { FiExternalLink } from "react-icons/fi";
 
 export default function Share({ ShareUrl, arise }) {
   const [copied, setCopied] = useState(false);
@@ -102,7 +104,15 @@ export default function Share({ ShareUrl, arise }) {
         /> */}
 
         <div className="btnio">
-          <div className="secoi">
+          <div
+            className="secoi"
+            style={{
+              margin: "0 auto", // Center horizontally
+              textAlign: "center", // Center text inside
+              maxWidth: "600px", // Optional: limit width for better layout
+              width: "100%", // Responsive width
+            }}
+          >
             <p style={{ fontSize: "1rem", color: "#fff", marginBottom: "8px" }}>
               Copy the link below and add it to your{" "}
               <span style={{ color: "#00f2fe", fontWeight: 500 }}>
@@ -121,12 +131,14 @@ export default function Share({ ShareUrl, arise }) {
                 borderRadius: "8px",
                 fontSize: "0.9rem",
                 wordBreak: "break-all",
+                padding: "8px",
               }}
             >
               {truncatedUrl}
             </code>
           </div>
         </div>
+
         <div className="btnio">
           <button onClick={handleCopy} className="copy-btn">
             {copied ? (
@@ -139,12 +151,23 @@ export default function Share({ ShareUrl, arise }) {
                 <MdContentCopy />
                 <span className="button-text large-screen-only">Copy</span>
               </>
-            )}{" "}
+            )}
           </button>
+
           <button onClick={() => setOpen(true)} className="share-btn">
             <FaShareAlt />
             <span className="button-text large-screen-only">Share</span>
           </button>
+
+          <Link
+            href="https://example.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="visit-btn"
+          >
+            <FiExternalLink />
+            <span className="button-text large-screen-only">Visit</span>
+          </Link>
         </div>
       </div>
 

@@ -41,7 +41,8 @@
 
 /* Buttons */
 .copy-btn,
-.share-btn {
+.share-btn,
+.visit-btn {
   background-color: #273549 !important;
   border: 1px solid transparent;
   padding: 8px 12px;
@@ -55,7 +56,8 @@
 }
 
 .copy-btn:hover,
-.share-btn:hover {
+.share-btn:hover,
+.visit-btn:hover {
   background-color: var(--theme-color) !important;
   color: #000 !important;
 }
@@ -322,7 +324,7 @@
   padding: 8px 12px;
   border-radius: 8px;
   color: white !important;
-  cursor: pointer; 
+  cursor: pointer;
   transition: 0.2s;
   display: flex;
   align-items: center;

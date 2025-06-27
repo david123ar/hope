@@ -5,35 +5,39 @@ import { connectDB } from "@/lib/mongoClient";
 
 export async function PUT(request) {
   const session = await getServerSession(authOptions);
-
-  // ✅ Use username instead of id
   if (!session?.user?.username) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
     const { orderedIds } = await request.json();
+    if (!Array.isArray(orderedIds)) {
+      return NextResponse.json({ error: "Invalid data" }, { status: 400 });
+    }
+
     const db = await connectDB();
+    const collection = db.collection("links");
 
-    // ✅ Query by username _id
-    const userDoc = await db.collection("links").findOne({ _id: session.user.username });
-
-    if (!userDoc) {
+    const userDoc = await collection.findOne({ _id: session.user.username });
+    if (!userDoc || !Array.isArray(userDoc.links)) {
       return NextResponse.json({ error: "No links found" }, { status: 404 });
     }
 
-    // Re-map and reorder links
-    const updatedLinks = userDoc.links.map(link => {
-      const match = orderedIds.find(l => l.id === link.id);
-      return match ? { ...link, position: match.position } : link;
+    const positionMap = new Map(orderedIds.map((l) => [l.id, l.position]));
+
+    const updatedLinks = userDoc.links.map((link) => {
+      const newPosition = positionMap.get(link.id);
+      return typeof newPosition === "number"
+        ? { ...link, position: newPosition }
+        : link;
     });
 
-    await db.collection("links").updateOne(
+    await collection.updateOne(
       { _id: session.user.username },
       { $set: { links: updatedLinks } }
     );
 
-    return NextResponse.json({ message: "Order updated" });
+    return NextResponse.json({ message: "Link order updated" });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

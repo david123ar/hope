@@ -174,7 +174,7 @@ export default function Design(props) {
                   }}
                 >
                   <iframe
-                    src={`/ad?user=${session?.user?.id}&username=${session?.user?.username}&theme=${selectedlink}`}
+                    src={`/ad?user=${session?.user?.username}&username=${session?.user?.username}&theme=${selectedlink}`}
                     title="Ad Banner"
                     style={{
                       width: "100%",
