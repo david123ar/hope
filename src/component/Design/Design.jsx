@@ -136,7 +136,7 @@ export default function Design(props) {
             ))}
             <Share
               ShareUrl={`https://biolynk.shoko.fun/${session?.user?.username}${
-                props.refer ? `?refer=${props.refer}` : `?refer=weebhideout`
+                props.refer ? `?refer=${props.refer}` : ``
               }`}
             />
           </div>

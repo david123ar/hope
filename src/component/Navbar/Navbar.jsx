@@ -112,7 +112,7 @@ export default function Navbar({ lang, refer, selectL }) {
             <FaBars size={25} />
           </div>
           <div>
-            <Link href={`/${refer ? `?refer=${refer}` : `?refer=weebhideout`}`}>
+            <Link href={`/${refer ? `?refer=${refer}` : ``}`}>
               <div className="logo-container">
                 <div className="logo-icon"></div>
                 <div className="logo-text">{siteName}</div>

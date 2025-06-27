@@ -17,7 +17,7 @@ export default function Footer(props) {
       return (
         <Link
           href={`/az-list/${el}${
-            props.refer ? `?refer=${props.refer}` : `?refer=weebhideout`
+            props.refer ? `?refer=${props.refer}` : ``
           }`}
           key={el}
           className="alphabet-tile"
@@ -51,7 +51,7 @@ export default function Footer(props) {
         <div className="main-element">
           <Link
             href={`/${
-              props.refer ? `?refer=${props.refer}` : `?refer=weebhideout`
+              props.refer ? `?refer=${props.refer}` : ``
             }`}
           >
             <div className="logo-container">
@@ -69,7 +69,7 @@ export default function Footer(props) {
       {/* <div className="alphabet-list d-flex">
         <Link
           href={`/az-list${
-            props.refer ? `?refer=${props.refer}` : `?refer=weebhideout`
+            props.refer ? `?refer=${props.refer}` : ``
           }`}
           onClick={handleNavigation}
         >
@@ -77,7 +77,7 @@ export default function Footer(props) {
         </Link>
         <Link
           href={`/az-list/other${
-            props.refer ? `?refer=${props.refer}` : `?refer=weebhideout`
+            props.refer ? `?refer=${props.refer}` : ``
           }`}
           onClick={handleNavigation}
         >
@@ -85,7 +85,7 @@ export default function Footer(props) {
         </Link>
         <Link
           href={`/az-list/0-9${
-            props.refer ? `?refer=${props.refer}` : `?refer=weebhideout`
+            props.refer ? `?refer=${props.refer}` : ``
           }`}
           onClick={handleNavigation}
         >

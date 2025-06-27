@@ -1,20 +1,20 @@
 .oit {
   display: flex;
-  /* flex-direction: column; Stack items vertically */
-  align-items: center;
+  align-items: flex-start; /* Changed from center to start from top after padding */
   justify-content: center;
-  height: 100vh; /* Full height of viewport */
+  padding-top: 65px;
+  flex-wrap: wrap;
+  height: 100%;
+  min-height: calc(100vh - 65px);
 }
 
 .oit-3 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  /* margin-top: 1rem; Optional spacing */
+  justify-content: flex-start; /* Ensure content starts from the top */
   width: 30%;
 }
-
 .inn-1 {
   position: relative;
   width: 270px;
@@ -240,14 +240,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: flex-start !important;
   border-right: 1px solid #00f2fe44;
-
-  height: 80vh;
-  max-height: calc(100vh - 65px);
-  margin-top: 65px;
-  /* overflow-y: auto; */
   box-sizing: border-box;
+  /* Remove fixed height */
 }
 
 /* adding link side */

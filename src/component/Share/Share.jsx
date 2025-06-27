@@ -160,7 +160,7 @@ export default function Share({ ShareUrl, arise }) {
           </button>
 
           <Link
-            href="https://example.com"
+            href={ShareUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="visit-btn"
