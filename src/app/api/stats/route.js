@@ -16,25 +16,55 @@ export async function GET(req) {
   const end = searchParams.get("end");
 
   if (!start || !end) {
-    return NextResponse.json({ error: "Missing date range parameters" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Missing date range parameters" },
+      { status: 400 }
+    );
   }
 
   try {
-    // Connect to MongoDB
     const db = await connectDB();
 
-    // Get publisher info
+    // Fetch publisher info
     const publisher = await db.collection("publishers").findOne({
       _id: new ObjectId(session.user.id),
     });
 
-    if (!publisher || !publisher.adUnit?.id) {
-      return NextResponse.json({ error: "Publisher or adUnit ID not found" }, { status: 404 });
+    if (!publisher) {
+      return NextResponse.json({ error: "Publisher not found" }, { status: 404 });
+    }
+
+    // ✅ If username is AnimeArenaX, use Adsterratools API
+    if (publisher._id === "AnimeArenaX") {
+      const apiKey = "47e883e8ed4e810c158f9dc6937f4fd0";
+      const domainId = "3943648";
+      const url = `https://api3.adsterratools.com/publisher/stats.json?start_date=${start}&finish_date=${end}&group_by=date&domain=${domainId}`;
+
+      const res = await fetch(url, {
+        headers: {
+          Accept: "application/json",
+          "X-API-Key": apiKey,
+        },
+      });
+
+      if (!res.ok) {
+        return NextResponse.json(
+          { error: "Failed to fetch Adsterra stats" },
+          { status: res.status }
+        );
+      }
+
+      const json = await res.json();
+      return NextResponse.json(json);
+    }
+
+    // 🧠 For other publishers: fallback to local DB
+    if (!publisher.adUnit?.id) {
+      return NextResponse.json({ error: "AdUnit ID not found" }, { status: 404 });
     }
 
     const adUnitId = publisher.adUnit.id;
 
-    // Query stats from adStats collection
     const stats = await db.collection("adStats").find({
       adId: adUnitId,
       date: {
@@ -45,7 +75,10 @@ export async function GET(req) {
 
     return NextResponse.json(stats);
   } catch (error) {
-    console.error("MongoDB adStats fetch error:", error);
-    return NextResponse.json({ error: "Failed to fetch stats from DB" }, { status: 500 });
+    console.error("Stats fetch error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }
