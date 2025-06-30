@@ -25,20 +25,8 @@ export async function GET(req) {
   try {
     const db = await connectDB();
 
-    // Fetch publisher info
-    const publisher = await db.collection("publishers").findOne({
-      _id: new ObjectId(session.user.id),
-    });
-
-    if (!publisher) {
-      return NextResponse.json(
-        { error: "Publisher not found" },
-        { status: 404 }
-      );
-    }
-
     // ✅ If username is AnimeArenaX, use Adsterratools API
-    if (session?.user?.username === "AnimeArenaX") {
+    if (session.user.username === "AnimeArenaX") {
       const apiKey = "47e883e8ed4e810c158f9dc6937f4fd0";
       const domainId = "3943648";
       const url = `https://api3.adsterratools.com/publisher/stats.json?start_date=${start}&finish_date=${end}&group_by=date&domain=${domainId}`;
@@ -61,26 +49,24 @@ export async function GET(req) {
       return NextResponse.json(json);
     }
 
-    // 🧠 For other publishers: fallback to local DB
-    if (!publisher.adUnit?.id) {
-      return NextResponse.json(
-        { error: "AdUnit ID not found" },
-        { status: 404 }
-      );
+    // 🌐 Fetch publisher from DB for all other users
+    const publisher = await db.collection("publishers").findOne({
+      _id: new ObjectId(session.user.id),
+    });
+
+    if (!publisher || !publisher.adUnit?.id) {
+      return NextResponse.json({ error: "Publisher or adUnit not found" }, { status: 404 });
     }
 
     const adUnitId = publisher.adUnit.id;
 
-    const stats = await db
-      .collection("adStats")
-      .find({
-        adId: adUnitId,
-        date: {
-          $gte: start,
-          $lte: end,
-        },
-      })
-      .toArray();
+    const stats = await db.collection("adStats").find({
+      adId: adUnitId,
+      date: {
+        $gte: start,
+        $lte: end,
+      },
+    }).toArray();
 
     return NextResponse.json(stats);
   } catch (error) {
