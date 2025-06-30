@@ -56,17 +56,8 @@ const BioClient = ({ user, publisher, referredPublisher, links, design }) => {
           >
             <img
               src={
-                user.username === "AnimeArenaX"
-                  ? "https://instagram.fjai5-1.fna.fbcdn.net/v/t51.2885-19/465591634_511004775257746_5916888551466613309_n.jpg?stp=dst-jpg_s320x320_tt6&_nc_ht=instagram.fjai5-1.fna.fbcdn.net&_nc_cat=1&_nc_oc=Q6cZ2QGcRvUeARmmbRtLfI5_dqyWc0wz2u2lrbHFQteLblyd2xhvdz8gRN5hrM0Ojw6O8sE&_nc_ohc=UkgvYx1gEGMQ7kNvwEaLtvU&_nc_gid=xYj4u_evZ1KF-YZrFfa4Xw&edm=AOQ1c0wBAAAA&ccb=7-5&oh=00_AfMR7Eb5uxWF7fnr1RkFmHuNd2TK2lyxrv-XLmLHFBG6MA&oe=6867EA92&_nc_sid=8b3546"
-                  : user.avatar
+                user.username === "AnimeArenaX" ? "/arenax.jpg" : user.avatar
               }
-              onError={(e) => {
-                if (user.username === "AnimeArenaX") {
-                  e.target.src = "/arenax.jpg"; // Fallback if Instagram fails
-                } else {
-                  e.target.src = "/default-avatar.jpg"; // Optional global fallback
-                }
-              }}
               alt="avatar"
               className="rounded-full w-24 h-24 object-cover"
             />
