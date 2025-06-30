@@ -113,7 +113,7 @@ export async function GET() {
     const doc = await db.collection("links").findOne({ _id: session.user.username });
 
     // 🔁 Sort in descending order so latest appears first
-    const sortedLinks = doc?.links?.sort((a, b) => b.position - a.position) || [];
+    const sortedLinks = doc?.links;
     const design = doc?.design || "/done.jpg";
 
     return NextResponse.json({ links: sortedLinks, design });
@@ -121,6 +121,7 @@ export async function GET() {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
 
 // PATCH: Save selected design
 export async function PATCH(request) {
