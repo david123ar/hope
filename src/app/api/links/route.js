@@ -25,7 +25,7 @@ export async function POST(request) {
     if (!existingUser?.design) {
       await links.updateOne(
         { _id: session.user.username },
-        { $set: { design: "/done.jpg" } },
+        { $set: { design: "/done.jpeg" } },
         { upsert: true }
       );
     }
@@ -114,7 +114,7 @@ export async function GET() {
 
     // 🔁 Sort in descending order so latest appears first
     const sortedLinks = doc?.links;
-    const design = doc?.design || "/done.jpg";
+    const design = doc?.design || "/done.jpeg";
 
     return NextResponse.json({ links: sortedLinks, design });
   } catch (error) {
