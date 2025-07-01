@@ -263,10 +263,9 @@ export const themeStyles = {
     usernameColor: "#ff4d4d",
     usernameShadow: "0 1px 4px rgba(255, 0, 0, 0.5)",
 
-    descriptionBg: "rgba(255, 255, 255, 0.1)",
-    descriptionColor: "#000", // Light reddish-pink tint for readability and red feel
-    descriptionShadow: "0 1px 3px rgba(0, 0, 0, 0.4)",
-
+    descriptionBg: "rgba(0, 0, 0, 0.5)", // Dark background (black with slight transparency)
+    descriptionColor: "#ffffff", // White text
+    descriptionShadow: "0 1px 3px rgba(255, 0, 0, 0.4)", // Red glow for a stylish pop // Slight shadow for legibility
     linkBg: "linear-gradient(to right, #ff0000, #ffffff, #000000)",
     linkHoverBg: "linear-gradient(to right, #ff4d4d, #f0f0f0, #1a1a1a)",
     linkColor: "#000000",
