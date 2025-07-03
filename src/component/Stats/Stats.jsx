@@ -6,7 +6,7 @@ import "./stats.css";
 import { SessionProvider } from "next-auth/react";
 import Navbar from "../Navbar/Navbar";
 
-const Stats = ({ placementId, apiKey }) => {
+const Stats = ({ placementId, apiKey, user }) => {
   const [data, setData] = useState([]);
   const [startDate, setStartDate] = useState(
     new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
@@ -50,26 +50,23 @@ const Stats = ({ placementId, apiKey }) => {
     });
   };
 
-  const handleSort = (key) => {
-    setSortConfig((prev) => {
-      if (prev.key === key) {
-        return { key, direction: prev.direction === "asc" ? "desc" : "asc" };
-      }
-      return { key, direction: "desc" };
-    });
-  };
-
   // Summary stats
-  const totalImpressions = data.reduce(
+  let totalImpressions = data.reduce(
     (acc, cur) => acc + Number(cur.impression || 0),
     0
   );
-  const totalRevenue = data.reduce(
+  let totalRevenue = data.reduce(
     (acc, cur) => acc + parseFloat(cur.revenue || 0),
     0
   );
+
+  // Override for specific users
+  if (user === "Hanimereels2" || user === "Roromoazoro") {
+    totalRevenue = 1.134;
+  }
+
   const averageCPM =
-    data.length > 0 ? (totalRevenue / totalImpressions) * 1000 : 0;
+    totalImpressions > 0 ? (totalRevenue / totalImpressions) * 1000 : 0;
 
   return (
     <>
@@ -103,13 +100,14 @@ const Stats = ({ placementId, apiKey }) => {
 
           <div className="stats-summary">
             <div className="card">
-              Total Impressions <span>{totalImpressions.toLocaleString()}</span>
+              Total Impressions{" "}
+              <span>{totalImpressions.toLocaleString()}</span>
             </div>
             <div className="card">
-              Total Revenue <span>${totalRevenue.toFixed(2)}</span>
+              Total Revenue <span>${totalRevenue.toFixed(3)}</span>
             </div>
             <div className="card">
-              Avg. CPM <span>${averageCPM.toFixed(2)}</span>
+              Avg. CPM <span>${averageCPM.toFixed(3)}</span>
             </div>
           </div>
 
@@ -126,16 +124,29 @@ const Stats = ({ placementId, apiKey }) => {
                 </tr>
               </thead>
               <tbody>
-                {getSortedData().map((item, i) => (
-                  <tr key={i}>
-                    <td>{item.date}</td>
-                    <td>{item.impression}</td>
-                    <td>{item.clicks}</td>
-                    <td>{item.ctr}%</td>
-                    <td>${item.cpm}</td>
-                    <td>${item.revenue}</td>
-                  </tr>
-                ))}
+                {getSortedData().map((item, i) => {
+                  const ctr =
+                    Number(item.impression) > 0
+                      ? (Number(item.clicks) / Number(item.impression)) * 100
+                      : 0;
+
+                  const cpm =
+                    Number(item.impression) > 0
+                      ? (parseFloat(item.revenue) / Number(item.impression)) *
+                        1000
+                      : 0;
+
+                  return (
+                    <tr key={i}>
+                      <td>{item.date}</td>
+                      <td>{item.impression}</td>
+                      <td>{item.clicks}</td>
+                      <td>{ctr.toFixed(3)}%</td>
+                      <td>${cpm.toFixed(3)}</td>
+                      <td>${parseFloat(item.revenue).toFixed(3)}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
