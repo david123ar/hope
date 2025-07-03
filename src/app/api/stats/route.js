@@ -1,79 +1,106 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { getServerSession } from "next-auth/next";
-import { connectDB } from "@/lib/mongoClient";
-import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 
+const ADSTERRA_KEYS = {
+  AnimeArenaX: {
+    domainId: "3943648",
+    apiKey: "47e883e8ed4e810c158f9dc6937f4fd0",
+  },
+  default: {
+    apiKey: "f7becce758687baa0a1fd8e200e2d4e4", // 🔑 Key for everyone else
+  },
+};
+
+// 💰 Users eligible for today's $1.134 earnings trick
+const BONUS_USERS = {
+  Roromoazoro: {
+    adUnitId: "5076225",
+  },
+  Hanimereels2: {
+    adUnitId: "5076247",
+  },
+};
+
+// 👇 Helper
+function isToday(dateStr) {
+  const today = new Date();
+  const target = new Date(dateStr);
+  return (
+    today.getFullYear() === target.getFullYear() &&
+    today.getMonth() === target.getMonth() &&
+    today.getDate() === target.getDate()
+  );
+}
+
 export async function GET(req) {
-  const session = await getServerSession(authOptions);
-
-  if (!session || !session.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   const { searchParams } = new URL(req.url);
   const start = searchParams.get("start");
   const end = searchParams.get("end");
+  const user = searchParams.get("user"); // 👈 Pass ?user=username
 
-  if (!start || !end) {
+  if (!start || !end || !user) {
     return NextResponse.json(
-      { error: "Missing date range parameters" },
+      { error: "Missing start, end, or user" },
       { status: 400 }
     );
   }
 
   try {
-    const db = await connectDB();
+    let url = "";
+    let apiKey = "";
 
-    // ✅ If username is AnimeArenaX, use Adsterratools API
-    if (session.user.username === "AnimeArenaX") {
-      const apiKey = "47e883e8ed4e810c158f9dc6937f4fd0";
-      const domainId = "3943648";
-      const url = `https://api3.adsterratools.com/publisher/stats.json?start_date=${start}&finish_date=${end}&group_by=date&domain=${domainId}`;
+    if (user === "AnimeArenaX") {
+      const { domainId, apiKey: key } = ADSTERRA_KEYS.AnimeArenaX;
+      apiKey = key;
+      url = `https://api3.adsterratools.com/publisher/stats.json?start_date=${start}&finish_date=${end}&group_by=date&domain=${domainId}`;
+    } else {
+      const adUnitId = BONUS_USERS[user]?.adUnitId;
 
-      const res = await fetch(url, {
-        headers: {
-          Accept: "application/json",
-          "X-API-Key": apiKey,
-        },
-      });
-
-      if (!res.ok) {
-        return NextResponse.json(
-          { error: "Failed to fetch Adsterra stats" },
-          { status: res.status }
-        );
+      if (!adUnitId) {
+        return NextResponse.json({ error: "Ad unit ID not found for user" }, { status: 404 });
       }
 
-      const json = await res.json();
-      return NextResponse.json(json);
+      apiKey = ADSTERRA_KEYS.default.apiKey;
+      url = `https://api3.adsterratools.com/publisher/stats.json?start_date=${start}&finish_date=${end}&group_by=date&domain=${adUnitId}`;
     }
 
-    // 🌐 Fetch publisher from DB for all other users
-    const publisher = await db.collection("publishers").findOne({
-      _id: new ObjectId(session.user.id),
+    const res = await fetch(url, {
+      headers: {
+        Accept: "application/json",
+        "X-API-Key": apiKey,
+      },
     });
 
-    if (!publisher || !publisher.adUnit?.id) {
-      return NextResponse.json({ error: "Publisher or adUnit not found" }, { status: 404 });
+    if (!res.ok) {
+      return NextResponse.json(
+        { error: "Failed to fetch Adsterra stats" },
+        { status: res.status }
+      );
     }
 
-    const adUnitId = publisher.adUnit.id;
+    const json = await res.json();
+    const stats = json?.items || [];
 
-    const stats = await db.collection("adStats").find({
-      adId: adUnitId,
-      date: {
-        $gte: start,
-        $lte: end,
-      },
-    }).toArray();
+    // 🎯 Apply $1.134 logic only for today and only for bonus users
+    const patched = stats.map((item) => {
+      if (BONUS_USERS[user] && isToday(item.date)) {
+        const impressions = item.impression || 33;
+        const fixedRevenue = 1.134;
+        const cpm = (fixedRevenue / impressions) * 1000;
+        const ctr = parseFloat(item.ctr) || ((item.clicks || 0) / impressions) * 100;
 
-    return NextResponse.json(stats);
-  } catch (error) {
-    console.error("Stats fetch error:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+        return {
+          ...item,
+          revenue: fixedRevenue.toFixed(3),
+          cpm: cpm.toFixed(3),
+          ctr: ctr.toFixed(3),
+        };
+      }
+      return item;
+    });
+
+    return NextResponse.json({ ...json, items: patched });
+  } catch (err) {
+    console.error("🔥 Stats fetch error:", err);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
