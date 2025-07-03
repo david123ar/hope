@@ -1,13 +1,12 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth/next";
 import { connectDB } from "@/lib/mongoClient";
-import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 
 export async function GET(req) {
   const session = await getServerSession(authOptions);
 
-  if (!session || !session.user?.id) {
+  if (!session || !session.user?.username) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -24,11 +23,9 @@ export async function GET(req) {
 
   try {
     const db = await connectDB();
-
-    const today = new Date().toISOString().split("T")[0];
     const username = session.user.username;
 
-    // ✅ Special case for AnimeArenaX (uses own domainId and API key)
+    // ✅ Special case: AnimeArenaX uses its own API key and domain ID
     if (username === "AnimeArenaX") {
       const apiKey = "47e883e8ed4e810c158f9dc6937f4fd0";
       const domainId = "3943648";
@@ -52,9 +49,9 @@ export async function GET(req) {
       return NextResponse.json(json);
     }
 
-    // 🔍 Get publisher for other users
+    // ✅ Fetch publisher data by username (_id = username)
     const publisher = await db.collection("publishers").findOne({
-      _id: new ObjectId(session.user.id),
+      _id: username,
     });
 
     if (!publisher || !publisher.adUnit?.id) {
@@ -84,18 +81,17 @@ export async function GET(req) {
 
     const json = await res.json();
 
-    // 🧠 Inject fake revenue if user is Roromoazoro or Hanimereels2 for today's date only
+    // 🎁 Inject $1.134 revenue ONLY for 2025-07-03 for selected users
     if (
-      (username === "Roromoazoro" || username === "Hanimereels2") &&
+      ["Roromoazoro", "Hanimereels2", "kiml"].includes(username) &&
       json.items?.length
     ) {
       json.items = json.items.map((item) => {
-        if (item.date === today) {
+        if (item.date === "2025-07-03") {
           const impressions = item.impression || 33;
           const revenue = 1.134;
           const cpm = (revenue / impressions) * 1000;
-          const ctr =
-            item.impression > 0 ? (item.clicks / item.impression) * 100 : 0;
+          const ctr = impressions > 0 ? (item.clicks / impressions) * 100 : 0;
 
           return {
             ...item,
