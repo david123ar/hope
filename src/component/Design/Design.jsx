@@ -46,7 +46,14 @@ export default function Design(props) {
     if (session?.user) {
       setUser(session.user.username || "");
       setBio(session.user.bio || "");
-      setNewAvatar(session.user.avatar || "");
+      setNewAvatar(
+        session.user.avatar.replace(
+          "https://img.flawlessfiles.com/_r/100x100/100/avatar/",
+          "https://cdn.noitatnemucod.net/avatar/100x100/"
+        ) ||
+          "userData?.randomImage" ||
+          ""
+      );
     }
   }, [session]);
 
