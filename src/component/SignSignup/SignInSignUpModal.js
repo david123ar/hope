@@ -1,15 +1,16 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { imageData } from "@/data/imageData";
-import "./signmodal.css";
 import { useRouter } from "next/navigation";
+import ReCAPTCHA from "react-google-recaptcha";
 import {
   AiOutlineEye,
   AiOutlineEyeInvisible,
   AiOutlineClose,
 } from "react-icons/ai";
 import Link from "next/link";
+import "./signmodal.css";
 
 const getRandomImage = () => {
   const categories = Object.keys(imageData.hashtags);
@@ -20,7 +21,7 @@ const getRandomImage = () => {
 };
 
 const SignInSignUpModal = (props) => {
-  const [isSignUp, setIsSignUp] = useState(props.landing ? true : false);
+  const [isSignUp, setIsSignUp] = useState(props.landing || false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
@@ -28,9 +29,10 @@ const SignInSignUpModal = (props) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const { data: session } = useSession();
   const [showPassword, setShowPassword] = useState(false);
+  const { data: session } = useSession();
   const router = useRouter();
+  const recaptchaRef = useRef();
 
   useEffect(() => {
     if (isSignUp) {
@@ -44,42 +46,43 @@ const SignInSignUpModal = (props) => {
     router.refresh();
   };
 
-const handleSignUp = async () => {
-  setError("");
-  setLoading(true);
+  const handleSignUp = async () => {
+    setError("");
+    setLoading(true);
 
-  // ✅ Validate username format
-  if (!/^[a-zA-Z0-9_]{3,30}$/.test(username)) {
-    setError(
-      "Username must be 3–30 characters and contain only letters, numbers, or underscores."
-    );
+    const captchaToken = await recaptchaRef.current.executeAsync();
+    recaptchaRef.current.reset();
+
+    if (!/^[a-zA-Z0-9_]{3,30}$/.test(username)) {
+      setError(
+        "Username must be 3–30 characters and contain only letters, numbers, or underscores."
+      );
+      setLoading(false);
+      return;
+    }
+
+    const payload = {
+      email,
+      password,
+      username,
+      avatar,
+      captchaToken,
+      ...(props.refer &&
+        /^[a-zA-Z0-9_]{3,30}$/.test(props.refer) && { refer: props.refer }),
+    };
+
+    const res = await fetch("/api/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await res.json();
     setLoading(false);
-    return;
-  }
+    if (!res.ok) return setError(data.message);
 
-  // ✅ Validate refer (if passed)
-  const payload = {
-    email,
-    password,
-    username,
-    avatar,
-    ...(props.refer &&
-      /^[a-zA-Z0-9_]{3,30}$/.test(props.refer) && { refer: props.refer }),
+    await signIn("credentials", { email, password, redirect: false });
   };
-
-  const res = await fetch("/api/auth/signup", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-
-  const data = await res.json();
-  setLoading(false);
-  if (!res.ok) return setError(data.message);
-
-  await signIn("credentials", { email, password, redirect: false });
-};
-
 
   const handleSignIn = async () => {
     setError("");
@@ -131,7 +134,6 @@ const handleSignUp = async () => {
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Cross Button */}
         <button
           onClick={() => props.setLogIsOpen(false)}
           className="close-button"
@@ -152,50 +154,14 @@ const handleSignUp = async () => {
               className="profile-avatar"
             />
             {props.landing ? (
-              <Link
-                href="/home"
-                style={{
-                  backgroundColor: "#00f2fe",
-                  color: "#0f172a",
-                  padding: "10px 20px",
-                  borderRadius: "8px",
-                  fontWeight: 600,
-                  textDecoration: "none",
-                  transition: "all 0.2s ease-in-out",
-                  display: "inline-block",
-                }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#00e0e0")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#00f2fe")
-                }
-              >
+              <Link href="/home" className="start-earning-btn">
                 Start Earning
               </Link>
             ) : (
               <button
                 onClick={handleSignOut}
                 disabled={loading}
-                style={{
-                  backgroundColor: "#00f2fe",
-                  color: "#0f172a",
-                  padding: "10px 20px",
-                  borderRadius: "8px",
-                  fontWeight: 600,
-                  border: "none",
-                  cursor: loading ? "not-allowed" : "pointer",
-                  opacity: loading ? 0.7 : 1,
-                  transition: "all 0.2s ease-in-out",
-                }}
-                onMouseEnter={(e) => {
-                  if (!loading)
-                    e.currentTarget.style.backgroundColor = "#00e0e0";
-                }}
-                onMouseLeave={(e) => {
-                  if (!loading)
-                    e.currentTarget.style.backgroundColor = "#00f2fe";
-                }}
+                className="start-earning-btn"
               >
                 {loading ? "Signing Out..." : "Sign Out"}
               </button>
@@ -287,6 +253,21 @@ const handleSignUp = async () => {
                 Forgot Password?
               </button>
             </div>
+
+            {isSignUp && (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  margin: "20px 0",
+                }}
+              >
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+                />
+              </div>
+            )}
 
             {error && <p style={{ color: "#ff9999" }}>{error}</p>}
 

@@ -28,9 +28,7 @@ export default function LandingPage(props) {
 
     try {
       setChecking(true);
-      const res = await fetch(
-        `/api/claim?username=${encodeURIComponent(trimmed)}`
-      );
+      const res = await fetch(`/api/claim?username=${encodeURIComponent(trimmed)}`);
       const data = await res.json();
 
       if (data.available) {
@@ -61,63 +59,55 @@ export default function LandingPage(props) {
         />
       )}
 
-      <div className="min-h-screen bg-[#0f172a] text-white flex flex-col items-center px-6 py-12">
-        <div className="text-center max-w-2xl">
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-[#00f2fe]">
+      <div className="min-h-screen bg-[#0f172a] text-white flex flex-col items-center px-4 sm:px-6 py-10">
+        {/* Header */}
+        <div className="text-center w-full max-w-3xl">
+          <h1 className="text-3xl sm:text-5xl font-extrabold text-[#00f2fe] leading-tight">
             Monetize Your Bio — Instantly
           </h1>
-          <p className="text-gray-300 mt-4 text-lg">
-            With <span className="text-white font-semibold">Bio Link</span>, you
-            get a powerful bio page, built-in monetization, and full traffic
-            stats — completely{" "}
+          <p className="text-gray-300 mt-4 text-base sm:text-lg">
+            With <span className="text-white font-semibold">Bio Link</span>, you get a powerful bio
+            page, built-in monetization, and full traffic stats — completely{" "}
             <span className="text-[#00f2fe] font-semibold">free</span>.
           </p>
-
-          {session ? (
-            <div className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
-              <button
-                onClick={() => router.push("/home")}
-                className="bg-[#00f2fe] hover:bg-[#00defe] text-black font-bold px-6 py-3 rounded-full transition"
-              >
-                Visit Home Page
-              </button>
-              {/* <button
-                onClick={() => {
-                  setLogIsOpen(true);
-                  setLanding(true);
-                }}
-                className="bg-white text-black font-semibold px-6 py-3 rounded-full border border-[#00f2fe] hover:bg-gray-100 transition"
-              >
-                Claim a New BioLynk
-              </button> */}
-            </div>
-          ) : (
-            <div className="mt-8 w-full max-w-md mx-auto">
-              <div className="flex w-full shadow-md rounded-full overflow-hidden border border-[#00f2fe]">
-                <input
-                  type="text"
-                  placeholder="Choose your username"
-                  className="flex-1 px-5 py-3 bg-[#1e293b] text-white focus:outline-none placeholder-gray-400 border-none"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-                <button
-                  onClick={handleClaimClick}
-                  disabled={checking}
-                  className="bg-[#00f2fe] hover:bg-[#00defe] text-black font-bold px-6 py-3 transition whitespace-nowrap"
-                >
-                  {checking ? "Checking..." : "Claim Your BioLynk"}
-                </button>
-              </div>
-              <p className="mt-2 text-sm text-gray-400 text-left">
-                This will be your unique BioLynk page.
-              </p>
-            </div>
-          )}
         </div>
 
-        {/* Benefits */}
-        <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-4xl">
+        {/* Claim Section */}
+        {session ? (
+          <div className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4 w-full max-w-md">
+            <button
+              onClick={() => router.push("/home")}
+              className="bg-[#00f2fe] hover:bg-[#00defe] text-black font-bold px-6 py-3 rounded-full w-full sm:w-auto transition"
+            >
+              Visit Home Page
+            </button>
+          </div>
+        ) : (
+          <div className="mt-8 w-full max-w-md">
+            <div className="flex flex-col sm:flex-row w-full border border-[#00f2fe] rounded-full overflow-hidden shadow-md">
+              <input
+                type="text"
+                placeholder="Choose your username"
+                className="flex-1 px-5 py-3 bg-[#1e293b] text-white placeholder-gray-400 border-none focus:outline-none"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+              <button
+                onClick={handleClaimClick}
+                disabled={checking}
+                className="bg-[#00f2fe] hover:bg-[#00defe] text-black font-bold px-6 py-3 transition"
+              >
+                {checking ? "Checking..." : "Claim Your BioLynk"}
+              </button>
+            </div>
+            <p className="mt-2 text-sm text-gray-400 text-left">
+              This will be your unique BioLynk page.
+            </p>
+          </div>
+        )}
+
+        {/* Feature Section */}
+        <div className="mt-16 grid gap-6 grid-cols-1 sm:grid-cols-2 w-full max-w-4xl">
           <Feature
             title="We Provide the Ads"
             description="You don’t need sponsors or brands. We handle ads — you just get paid."
@@ -136,12 +126,10 @@ export default function LandingPage(props) {
           />
         </div>
 
-        {/* How it works */}
-        <div className="mt-20 max-w-md w-full">
-          <div className="rounded-xl bg-[#1e293b] p-6 shadow-xl border border-[#222] text-left">
-            <h3 className="text-[#00f2fe] text-xl font-bold mb-2">
-              How It Works
-            </h3>
+        {/* How It Works */}
+        <div className="mt-20 w-full max-w-md">
+          <div className="bg-[#1e293b] p-6 rounded-xl shadow-lg border border-[#222] text-left">
+            <h3 className="text-[#00f2fe] text-xl font-bold mb-2">How It Works</h3>
             <ol className="list-decimal list-inside space-y-2 text-sm text-gray-300">
               <li>Create your free account</li>
               <li>Add your links — socials, shop, content</li>
