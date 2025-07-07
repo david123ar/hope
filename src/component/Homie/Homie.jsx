@@ -28,7 +28,9 @@ export default function LandingPage(props) {
 
     try {
       setChecking(true);
-      const res = await fetch(`/api/claim?username=${encodeURIComponent(trimmed)}`);
+      const res = await fetch(
+        `/api/claim?username=${encodeURIComponent(trimmed)}`
+      );
       const data = await res.json();
 
       if (data.available) {
@@ -37,7 +39,7 @@ export default function LandingPage(props) {
         toast.success("Username is available! Create your account.");
       } else {
         toast.error(data.message || "Username is not available");
-      } 
+      }
     } catch (err) {
       toast.error("Failed to check username.");
       console.error(err);
@@ -52,7 +54,7 @@ export default function LandingPage(props) {
         <SignInSignUpModal
           landing={landing}
           logIsOpen={logIsOpen}
-          setLogIsOpen={setLogIsOpen}
+          setLogIsOpen={setLogIsOpen} 
           sign={setLogIsOpen}
           refer={props.refer}
           username={username}
@@ -66,8 +68,9 @@ export default function LandingPage(props) {
             Monetize Your Bio — Instantly
           </h1>
           <p className="text-gray-300 mt-4 text-base sm:text-lg">
-            With <span className="text-white font-semibold">Bio Link</span>, you get a powerful bio
-            page, built-in monetization, and full traffic stats — completely{" "}
+            With <span className="text-white font-semibold">Bio Link</span>, you
+            get a powerful bio page, built-in monetization, and full traffic
+            stats — completely{" "}
             <span className="text-[#00f2fe] font-semibold">free</span>.
           </p>
         </div>
@@ -88,10 +91,11 @@ export default function LandingPage(props) {
               <input
                 type="text"
                 placeholder="Choose your username"
-                className="flex-1 px-5 py-3 bg-[#1e293b] text-white placeholder-gray-400 border-none focus:outline-none"
+                className="flex-1 px-5 py-3 bg-[#1e293b] text-white placeholder-gray-400 border-none focus:outline-none text-center sm:text-left placeholder:text-center sm:placeholder:text-left"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
+
               <button
                 onClick={handleClaimClick}
                 disabled={checking}
@@ -129,7 +133,9 @@ export default function LandingPage(props) {
         {/* How It Works */}
         <div className="mt-20 w-full max-w-md">
           <div className="bg-[#1e293b] p-6 rounded-xl shadow-lg border border-[#222] text-left">
-            <h3 className="text-[#00f2fe] text-xl font-bold mb-2">How It Works</h3>
+            <h3 className="text-[#00f2fe] text-xl font-bold mb-2">
+              How It Works
+            </h3>
             <ol className="list-decimal list-inside space-y-2 text-sm text-gray-300">
               <li>Create your free account</li>
               <li>Add your links — socials, shop, content</li>

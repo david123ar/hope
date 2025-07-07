@@ -24,7 +24,7 @@ const SignInSignUpModal = (props) => {
   const [isSignUp, setIsSignUp] = useState(props.landing || false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState(props.username || "");
   const [avatar, setAvatar] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -39,6 +39,12 @@ const SignInSignUpModal = (props) => {
       setAvatar(getRandomImage());
     }
   }, [isSignUp]);
+
+  useEffect(() => {
+    if (props.logIsOpen && props.username) {
+      setUsername(props.username);
+    }
+  }, [props.logIsOpen, props.username]);
 
   const toggleMode = () => {
     setIsSignUp(!isSignUp);
@@ -259,22 +265,20 @@ const SignInSignUpModal = (props) => {
               </button>
             </div>
 
-            {isSignUp && (
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  margin: "20px 0",
-                }}
-              >
-                <ReCAPTCHA
-                  ref={recaptchaRef}
-                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
-                  size="normal" // ✅ Checkbox reCAPTCHA
-                  theme="light" // or "light" depending on your UI
-                />
-              </div>
-            )}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                margin: "20px 0",
+              }}
+            >
+              <ReCAPTCHA
+                ref={recaptchaRef}
+                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+                size="normal"
+                theme="light"
+              />
+            </div>
 
             {error && (
               <p style={{ color: "#ff9999", marginBottom: "10px" }}>{error}</p>
