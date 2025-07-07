@@ -7,20 +7,13 @@ export async function GET(request) {
     const username = searchParams.get("username");
 
     if (!username) {
-      return NextResponse.json(
-        { available: false, message: "Username is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ available: false, message: "Username is required" }, { status: 400 });
     }
 
     const cleanUsername = username.trim().toLowerCase();
-
     const isValid = /^[a-zA-Z0-9_-]{3,32}$/.test(cleanUsername);
     if (!isValid) {
-      return NextResponse.json(
-        { available: false, message: "Invalid username format" },
-        { status: 400 }
-      );
+      return NextResponse.json({ available: false, message: "Invalid username format" }, { status: 400 });
     }
 
     const db = await connectDB();
@@ -32,9 +25,6 @@ export async function GET(request) {
     });
   } catch (error) {
     console.error("Check username API error:", error);
-    return NextResponse.json(
-      { available: false, message: "Internal Server Error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ available: false, message: "Internal Server Error" }, { status: 500 });
   }
 }

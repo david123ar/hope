@@ -2,6 +2,8 @@
   --theme: #00f2fe;
 }
 
+/* Reposition reCAPTCHA badge */
+
 /* Modal Background */
 .modal {
   display: flex;

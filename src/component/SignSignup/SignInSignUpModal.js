@@ -50,7 +50,12 @@ const SignInSignUpModal = (props) => {
     setError("");
     setLoading(true);
 
-    const captchaToken = await recaptchaRef.current.executeAsync();
+    const captchaToken = recaptchaRef.current.getValue();
+    if (!captchaToken) {
+      setError("Please complete the CAPTCHA.");
+      setLoading(false);
+      return;
+    }
     recaptchaRef.current.reset();
 
     if (!/^[a-zA-Z0-9_]{3,30}$/.test(username)) {
@@ -147,8 +152,8 @@ const SignInSignUpModal = (props) => {
             <p className="heddio">Welcome, {session.user.username}!</p>
             <img
               src={session.user.avatar.replace(
-                "https://cdn.noitatnemucod.net/avatar/100x100/",
-                "https://img.flawlessfiles.com/_r/100x100/100/avatar/"
+                "https://img.flawlessfiles.com/_r/100x100/100/avatar/",
+                "https://cdn.noitatnemucod.net/avatar/100x100/"
               )}
               alt="Profile"
               className="profile-avatar"
@@ -265,11 +270,15 @@ const SignInSignUpModal = (props) => {
                 <ReCAPTCHA
                   ref={recaptchaRef}
                   sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+                  size="normal" // ✅ Checkbox reCAPTCHA
+                  theme="light" // or "light" depending on your UI
                 />
               </div>
             )}
 
-            {error && <p style={{ color: "#ff9999" }}>{error}</p>}
+            {error && (
+              <p style={{ color: "#ff9999", marginBottom: "10px" }}>{error}</p>
+            )}
 
             <div className="btiom">
               <button type="submit" className="btio" disabled={loading}>

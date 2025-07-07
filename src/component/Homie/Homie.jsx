@@ -37,7 +37,7 @@ export default function LandingPage(props) {
         toast.success("Username is available! Create your account.");
       } else {
         toast.error(data.message || "Username is not available");
-      }
+      } 
     } catch (err) {
       toast.error("Failed to check username.");
       console.error(err);
