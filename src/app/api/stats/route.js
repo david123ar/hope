@@ -87,7 +87,7 @@ export async function GET(req) {
       json.items?.length
     ) {
       json.items = json.items.map((item) => {
-        // Injection for 2025-07-03
+        // Inject for 2025-07-03 (1.134 revenue)
         if (item.date === "2025-07-03" && ["Roromoazoro", "kiml"].includes(username)) {
           const impressions = item.impression || 33;
           const revenue = 1.134;
@@ -103,9 +103,9 @@ export async function GET(req) {
           };
         }
 
-        // Injection for 2025-07-12
+        // Inject for 2025-07-12 (fixed 568 impressions, 1.3 revenue)
         if (item.date === "2025-07-12" && username === "Hanimereels2") {
-          const impressions = Math.floor(Math.random() * (700 - 400 + 1)) + 400;
+          const impressions = 568;
           const revenue = 1.3;
           const cpm = (revenue / impressions) * 1000;
           const ctr = impressions > 0 ? (item.clicks / impressions) * 100 : 0;
