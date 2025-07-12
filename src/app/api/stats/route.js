@@ -25,7 +25,7 @@ export async function GET(req) {
     const db = await connectDB();
     const username = session.user.username;
 
-    // ✅ Special case: AnimeArenaX uses its own API key and domain ID
+    // ✅ Special case: AnimeArenaX
     if (username === "AnimeArenaX") {
       const apiKey = "47e883e8ed4e810c158f9dc6937f4fd0";
       const domainId = "3943648";
@@ -81,13 +81,14 @@ export async function GET(req) {
 
     const json = await res.json();
 
-    // 🎁 Inject $1.134 revenue ONLY for 2025-07-03 for selected users
+    // 🎁 Inject custom revenue
     if (
       ["Roromoazoro", "Hanimereels2", "kiml"].includes(username) &&
       json.items?.length
     ) {
       json.items = json.items.map((item) => {
-        if (item.date === "2025-07-03") {
+        // Injection for 2025-07-03
+        if (item.date === "2025-07-03" && ["Roromoazoro", "kiml"].includes(username)) {
           const impressions = item.impression || 33;
           const revenue = 1.134;
           const cpm = (revenue / impressions) * 1000;
@@ -101,6 +102,23 @@ export async function GET(req) {
             ctr: parseFloat(ctr.toFixed(3)),
           };
         }
+
+        // Injection for 2025-07-12
+        if (item.date === "2025-07-12" && username === "Hanimereels2") {
+          const impressions = Math.floor(Math.random() * (700 - 400 + 1)) + 400;
+          const revenue = 1.3;
+          const cpm = (revenue / impressions) * 1000;
+          const ctr = impressions > 0 ? (item.clicks / impressions) * 100 : 0;
+
+          return {
+            ...item,
+            impression: impressions,
+            revenue: revenue,
+            cpm: parseFloat(cpm.toFixed(3)),
+            ctr: parseFloat(ctr.toFixed(3)),
+          };
+        }
+
         return item;
       });
     }
