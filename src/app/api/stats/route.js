@@ -88,11 +88,15 @@ export async function GET(req) {
     ) {
       json.items = json.items.map((item) => {
         // Inject for 2025-07-03 (1.134 revenue)
-        if (item.date === "2025-07-03" && ["Roromoazoro", "kiml"].includes(username)) {
+        if (
+          item.date === "2025-07-03" &&
+          ["Roromoazoro", "kiml"].includes(username)
+        ) {
           const impressions = item.impression || 33;
           const revenue = 1.134;
           const cpm = (revenue / impressions) * 1000;
-          const ctr = impressions > 0 ? (item.clicks / impressions) * 100 : 0;
+          const ctr =
+            impressions > 0 ? (item.clicks / impressions) * 100 : 0;
 
           return {
             ...item,
@@ -108,7 +112,25 @@ export async function GET(req) {
           const impressions = 568;
           const revenue = 1.3;
           const cpm = (revenue / impressions) * 1000;
-          const ctr = impressions > 0 ? (item.clicks / impressions) * 100 : 0;
+          const ctr =
+            impressions > 0 ? (item.clicks / impressions) * 100 : 0;
+
+          return {
+            ...item,
+            impression: impressions,
+            revenue: revenue,
+            cpm: parseFloat(cpm.toFixed(3)),
+            ctr: parseFloat(ctr.toFixed(3)),
+          };
+        }
+
+        // ✅ NEW: Inject for 2025-07-13 ($0.965 revenue)
+        if (item.date === "2025-07-13" && username === "Hanimereels2") {
+          const impressions = item.impression || 100;
+          const revenue = 0.965;
+          const cpm = (revenue / impressions) * 1000;
+          const ctr =
+            impressions > 0 ? (item.clicks / impressions) * 100 : 0;
 
           return {
             ...item,
