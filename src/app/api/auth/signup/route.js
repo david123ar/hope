@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { hash } from "bcryptjs";
 import { connectDB } from "@/lib/mongoClient";
 import { imageData } from "@/data/imageData";
-import { adUnits } from "@/ads/adScripts";
 
 const getRandomImage = () => {
   const categories = Object.keys(imageData.hashtags);
@@ -71,7 +70,7 @@ export async function POST(req) {
       timeOfJoining,
     };
 
-    // Referral logic
+    // ✅ Referral logic
     if (typeof refer === "string" && /^[a-zA-Z0-9_]{3,30}$/.test(refer)) {
       const referrer = await publishers.findOne({ _id: refer });
       if (referrer) {

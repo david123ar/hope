@@ -30,10 +30,6 @@ export default async function BioPage({ params }) {
   // Get user by username
   const userDoc = await db.collection("users").findOne({ username });
 
-  if (!userDoc) {
-    return <div>User not found</div>;
-  }
-
   const user = {
     id: userDoc._id.toString(),
     email: userDoc.email,
