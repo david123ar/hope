@@ -54,7 +54,7 @@ const Page = () => {
       }}
     >
       <Script
-        src="//processestheycod.com/33a497c32aa8ecfffc3d4653d57e37f4/invoke.js"
+        src="//scrupulousyet.com/33a497c32aa8ecfffc3d4653d57e37f4/invoke.js"
         strategy="afterInteractive"
         data-cfasync="false"
         async
