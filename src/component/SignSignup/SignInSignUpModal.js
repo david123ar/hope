@@ -154,30 +154,7 @@ const SignInSignUpModal = (props) => {
         </button>
 
         {session ? (
-          <>
-            <p className="heddio">Welcome, {session.user.username}!</p>
-            <img
-              src={session.user.avatar.replace(
-                "https://img.flawlessfiles.com/_r/100x100/100/avatar/",
-                "https://cdn.noitatnemucod.net/avatar/100x100/"
-              )}
-              alt="Profile"
-              className="profile-avatar"
-            />
-            {props.landing ? (
-              <Link href="/home" className="start-earning-btn">
-                Start Earning
-              </Link>
-            ) : (
-              <button
-                onClick={handleSignOut}
-                disabled={loading}
-                className="start-earning-btn"
-              >
-                {loading ? "Signing Out..." : "Sign Out"}
-              </button>
-            )}
-          </>
+          ""
         ) : (
           <form
             onSubmit={(e) => {

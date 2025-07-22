@@ -1,6 +1,12 @@
 import BioClient from "@/component/BioClient/BioClient";
 import { connectDB } from "@/lib/mongoClient";
 
+// Helper: Capitalize first letter
+function capitalize(str) {
+  if (!str) return "";
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 // Metadata
 export async function generateMetadata({ params }) {
   const db = await connectDB();
@@ -15,9 +21,11 @@ export async function generateMetadata({ params }) {
     };
   }
 
+  const capitalizedUsername = capitalize(userDoc.username);
+
   return {
-    title: `${userDoc.username}'s Profile | Bio Link`,
-    description: `Check out ${userDoc.username}'s profile and explore their top links, content, and more on Bio Link.`,
+    title: `${capitalizedUsername}'s Profile | Bio Link`,
+    description: `Check out ${capitalizedUsername}'s profile and explore their top links, content, and more on Bio Link.`,
   };
 }
 
@@ -30,16 +38,18 @@ export default async function BioPage({ params }) {
   // Get user by username
   const userDoc = await db.collection("users").findOne({ username });
 
+  const capitalizedUsername = capitalize(userDoc.username);
+
   const user = {
     id: userDoc._id.toString(),
     email: userDoc.email,
-    username: userDoc.username,
+    username: capitalizedUsername,
     avatar: userDoc.avatar,
     bio: userDoc.bio || "",
     referredBy: userDoc.referredBy || null,
   };
 
-  // Get publisher by username (since now _id = username in publishers)
+  // Get publisher by username
   const publisherDoc = await db
     .collection("publishers")
     .findOne({ _id: username });
@@ -47,7 +57,7 @@ export default async function BioPage({ params }) {
     ? {
         id: publisherDoc._id,
         email: publisherDoc.email,
-        username: publisherDoc.username || username,
+        username: capitalize(publisherDoc.username || username),
         adUnit: publisherDoc.adUnit,
         joinedAt: publisherDoc.joinedAt,
       }
@@ -63,7 +73,7 @@ export default async function BioPage({ params }) {
     if (referredDoc) {
       referredPublisher = {
         id: referredDoc._id,
-        username: referredDoc.username || user.referredBy,
+        username: capitalize(referredDoc.username || user.referredBy),
         email: referredDoc.email,
         adUnit: referredDoc.adUnit,
         joinedAt: referredDoc.joinedAt,
