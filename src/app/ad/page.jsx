@@ -32,7 +32,7 @@ const Page = () => {
 
     if (!uid) return;
 
-    fetch(`/api/ad?user=${uid}`)
+    fetch(`/api/ad?user=${uid.toLowerCase()}`)
       .then((res) => res.json())
       .then((data) => {
         if (!data.error) {
