@@ -56,7 +56,7 @@ const BioClient = ({ user, publisher, referredPublisher, links, design }) => {
           >
             <img
               src={
-                user.username === "AnimeArenaX"
+                user.username === "animearenax"
                   ? "/arenax.jpg"
                   : user.avatar.replace(
                       "https://img.flawlessfiles.com/_r/100x100/100/avatar/",
