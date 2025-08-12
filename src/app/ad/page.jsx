@@ -8,7 +8,8 @@ const Page = () => {
   const [userId, setUserId] = useState(null);
   const [username, setUsername] = useState("this creator");
   const [adUnit, setAdUnit] = useState(null);
-  const [themeKey, setThemeKey] = useState("red"); // ✅ Default to "red"
+  const [themeKey, setThemeKey] = useState("red");
+  const [useFallbackAd, setUseFallbackAd] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -25,8 +26,6 @@ const Page = () => {
         .replace(".jpg", "")
         .replace(".jpeg", "");
       const themeName = backgroundToTheme[cleanedTheme] || cleanedTheme;
-
-      // ✅ fallback to red if invalid
       setThemeKey(themeName in themeStyles ? themeName : "red");
     }
 
@@ -47,13 +46,20 @@ const Page = () => {
         const container = document.getElementById(adUnit.containerId);
         if (container?.childNodes.length > 0) {
           setAdVisible(true);
+        } else {
+          // No ad loaded, trigger fallback
+          setUseFallbackAd(true);
         }
+      } else if (!adUnit) {
+        // If there's no ad unit at all, trigger fallback immediately
+        setUseFallbackAd(true);
       }
     }, 2000);
+
     return () => clearTimeout(timeout);
   }, [adUnit]);
 
-  const activeTheme = themeStyles[themeKey] || themeStyles["red"]; // ✅ guaranteed safe
+  const activeTheme = themeStyles[themeKey] || themeStyles["red"];
 
   return (
     <div
@@ -71,7 +77,8 @@ const Page = () => {
         position: "relative",
       }}
     >
-      {adUnit && (
+      {/* Main Ad Unit */}
+      {adUnit && !useFallbackAd && (
         <>
           <Script
             src={adUnit.scriptUrl}
@@ -92,7 +99,29 @@ const Page = () => {
         </>
       )}
 
-      {!adVisible && adUnit && (
+      {/* Fallback Ad Unit */}
+      {useFallbackAd && (
+        <>
+          <Script
+            async
+            data-cfasync="false"
+            src="//embeddedoxide.com/4d1bb62e3a55d2423e3d74a56299aa6e/invoke.js"
+          />
+          <div
+            id="container-4d1bb62e3a55d2423e3d74a56299aa6e"
+            style={{
+              width: "100%",
+              height: "100%",
+              position: "absolute",
+              top: 0,
+              left: 0,
+            }}
+          />
+        </>
+      )}
+
+      {/* Clickable fallback link if main ad script exists but doesn't render */}
+      {!adVisible && adUnit && !useFallbackAd && (
         <a
           href={adUnit.clickUrl || "#"}
           target="_blank"
