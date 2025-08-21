@@ -25,7 +25,7 @@ const Page = () => {
 
     const timeout = setTimeout(() => {
       const adContainer = document.getElementById(
-        "container-0edc04a5374d9021ce8e6b9f5bb01d53"
+        "container-33a497c32aa8ecfffc3d4653d57e37f4"
       );
       if (adContainer?.childNodes.length > 0) {
         setAdVisible(true);
@@ -54,7 +54,7 @@ const Page = () => {
       }}
     >
       <Script
-        src="//scrupulousyet.com/33a497c32aa8ecfffc3d4653d57e37f4/invoke.js"
+        src="//decencytopmost.com/33a497c32aa8ecfffc3d4653d57e37f4/invoke.js"
         strategy="afterInteractive"
         data-cfasync="false"
         async
