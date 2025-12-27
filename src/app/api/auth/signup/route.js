@@ -1,110 +1,159 @@
-import { NextResponse } from "next/server";
+import { adminDB } from "@/lib/firebaseAdmin";
+import { FieldValue } from "firebase-admin/firestore";
 import { hash } from "bcryptjs";
-import { connectDB } from "@/lib/mongoClient";
 import { imageData } from "@/data/imageData";
+import { adUnits } from "@/ads/adScripts";
+
+/* ============================
+   Helpers
+============================ */
 
 const getRandomImage = () => {
   const categories = Object.keys(imageData.hashtags);
-  const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+  const randomCategory =
+    categories[Math.floor(Math.random() * categories.length)];
   const images = imageData.hashtags[randomCategory].images;
   return images[Math.floor(Math.random() * images.length)];
 };
 
-export async function POST(req) {
+const getRandomUnassignedAdUnit = async () => {
+  const snap = await adminDB.collection("publishers").get();
+
+  const used = snap.docs
+    .map((d) => d.data()?.adUnit?.scriptUrl)
+    .filter(Boolean);
+
+  const available = adUnits.filter(
+    (ad) => !used.includes(ad.scriptUrl)
+  );
+
+  if (!available.length) {
+    throw new Error("No available ad units");
+  }
+
+  return available[Math.floor(Math.random() * available.length)];
+};
+
+/* ============================
+   POST
+============================ */
+
+export const POST = async (req) => {
   try {
-    const db = await connectDB();
-    const users = db.collection("users");
-    const publishers = db.collection("publishers");
+    const { email, username, password, refer } = await req.json();
 
-    const { email, username, password, refer, captchaToken } = await req.json();
-
-    if (!email || !username || !password || !captchaToken) {
-      return NextResponse.json({ message: "All fields are required" }, { status: 400 });
+    if (!email || !username || !password) {
+      return new Response(
+        JSON.stringify({ message: "All fields are required" }),
+        { status: 400 }
+      );
     }
 
     if (!/^[a-zA-Z0-9_]{3,30}$/.test(username)) {
-      return NextResponse.json({
-        message: "Username must be 3–30 characters and contain only letters, numbers, or underscores.",
-      }, { status: 400 });
+      return new Response(
+        JSON.stringify({ message: "Invalid username format" }),
+        { status: 400 }
+      );
     }
 
-    // ✅ Verify reCAPTCHA with Google
-    const verifyUrl = `https://www.google.com/recaptcha/api/siteverify`;
-    const params = new URLSearchParams();
-    params.append("secret", process.env.RECAPTCHA_SECRET_KEY);
-    params.append("response", captchaToken);
+    /* ============================
+       USERNAME = DOC ID
+    ============================ */
 
-    const captchaVerify = await fetch(verifyUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: params.toString(),
-    });
+    const userRef = adminDB.collection("users").doc(username);
+    const userSnap = await userRef.get();
 
-    const captchaResult = await captchaVerify.json();
-    if (!captchaResult.success) {
-      return NextResponse.json({ message: "Failed CAPTCHA verification" }, { status: 400 });
+    if (userSnap.exists) {
+      return new Response(
+        JSON.stringify({ message: "Username already taken" }),
+        { status: 400 }
+      );
     }
 
-    const [existingUser, existingUsername] = await Promise.all([
-      users.findOne({ email }),
-      users.findOne({ username }),
-    ]);
+    /* ============================
+       EMAIL UNIQUENESS CHECK
+    ============================ */
 
-    if (existingUser) {
-      return NextResponse.json({ message: "Email already in use" }, { status: 400 });
+    const emailSnap = await adminDB
+      .collection("users")
+      .where("email", "==", email)
+      .limit(1)
+      .get();
+
+    if (!emailSnap.empty) {
+      return new Response(
+        JSON.stringify({ message: "Email already in use" }),
+        { status: 400 }
+      );
     }
 
-    if (existingUsername) {
-      return NextResponse.json({ message: "Username already taken" }, { status: 400 });
-    }
+    /* ============================
+       CREATE USER
+    ============================ */
 
     const hashedPassword = await hash(password, 10);
     const avatar = getRandomImage();
     const timeOfJoining = new Date();
 
-    const newUser = {
+    const userData = {
       email,
       username,
       password: hashedPassword,
       avatar,
+      bio: "",
       timeOfJoining,
     };
 
-    // ✅ Referral logic
-    if (typeof refer === "string" && /^[a-zA-Z0-9_]{3,30}$/.test(refer)) {
-      const referrer = await publishers.findOne({ _id: refer });
-      if (referrer) {
-        newUser.referredBy = refer;
-        await publishers.updateOne({ _id: refer }, { $inc: { referralCount: 1 } });
+    /* ============================
+       REFERRAL
+    ============================ */
+
+    if (refer && typeof refer === "string") {
+      const refRef = adminDB.collection("publishers").doc(refer);
+      const refSnap = await refRef.get();
+
+      if (refSnap.exists) {
+        userData.referredBy = refer;
+        await refRef.update({
+          referralCount: FieldValue.increment(1),
+        });
       }
     }
 
-    const userInsertResult = await users.insertOne(newUser);
+    await userRef.set(userData);
 
-    const adUnit = {
-      id: "",
-      index: "",
-      scriptUrl: "",
-      containerId: "",
-      clickUrl: "",
-    };
+    /* ============================
+       PUBLISHER + AD UNIT
+    ============================ */
 
-    await publishers.insertOne({
-      _id: username,
-      email,
-      adUnit,
-      joinedAt: timeOfJoining,
-    });
+    const adUnit = await getRandomUnassignedAdUnit();
 
-    return NextResponse.json({
-      message: "User registered successfully",
-      avatar,
-      adUnit,
-      userId: userInsertResult.insertedId,
-      timeOfJoining,
-    }, { status: 201 });
+    await adminDB
+      .collection("publishers")
+      .doc(username)
+      .set({
+        email,
+        username,
+        adUnit,
+        joinedAt: timeOfJoining,
+        referralCount: 0,
+      });
 
+    return new Response(
+      JSON.stringify({
+        message: "User registered successfully",
+        username,
+        avatar,
+        adUnit,
+        timeOfJoining,
+      }),
+      { status: 201 }
+    );
   } catch (error) {
-    return NextResponse.json({ message: "Server Error", error: error.message }, { status: 500 });
+    console.error(error);
+    return new Response(
+      JSON.stringify({ message: "Server Error", error: error.message }),
+      { status: 500 }
+    );
   }
-}
+};

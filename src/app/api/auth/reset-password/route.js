@@ -1,37 +1,24 @@
-import { connectDB } from "@/lib/mongoClient";
+import { adminDB } from "@/lib/firebaseAdmin";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 
 export const POST = async (req) => {
   try {
     const { email } = await req.json();
-    const db = await connectDB();
-    const users = db.collection("users");
+    if (!email) return new Response(JSON.stringify({ message: "Email is required" }), { status: 400 });
 
-    const user = await users.findOne({ email });
-    if (!user) {
-      return new Response(JSON.stringify({ message: "User not found" }), {
-        status: 404,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
+    const userRef = adminDB.collection("users").doc(email);
+    const snap = await userRef.get();
+    if (!snap.exists) return new Response(JSON.stringify({ message: "User not found" }), { status: 404 });
 
-    // Generate reset token (random) and expiry (1 hour)
     const resetToken = crypto.randomBytes(32).toString("hex");
-    const resetTokenExpiry = new Date(Date.now() + 3600000); // Store as Date object
+    const resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 
-    await users.updateOne(
-      { email },
-      { $set: { resetToken, resetTokenExpiry } }
-    );
+    await userRef.update({ resetToken, resetTokenExpiry });
 
-    // Send reset email
     const transporter = nodemailer.createTransport({
       service: "Gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
+      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
     });
 
     const resetLink = `${process.env.NEXT_PUBLIC_BASE_URL}/reset-password?token=${resetToken}`;
@@ -40,17 +27,11 @@ export const POST = async (req) => {
       from: process.env.EMAIL_USER,
       to: email,
       subject: "Password Reset Request",
-      html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>`,
+      html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p><p>This link expires in 1 hour.</p>`,
     });
 
-    return new Response(
-      JSON.stringify({ message: "Password reset email sent!" }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ message: "Password reset email sent!" }), { status: 200 });
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
   }
 };

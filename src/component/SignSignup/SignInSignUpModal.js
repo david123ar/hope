@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { imageData } from "@/data/imageData";
 import { useRouter } from "next/navigation";
-import ReCAPTCHA from "react-google-recaptcha";
 import {
   AiOutlineEye,
   AiOutlineEyeInvisible,
@@ -52,17 +51,13 @@ const SignInSignUpModal = (props) => {
     router.refresh();
   };
 
+  /* =========================
+     SIGN UP
+  ========================= */
+
   const handleSignUp = async () => {
     setError("");
     setLoading(true);
-
-    const captchaToken = recaptchaRef.current.getValue();
-    if (!captchaToken) {
-      setError("Please complete the CAPTCHA.");
-      setLoading(false);
-      return;
-    }
-    recaptchaRef.current.reset();
 
     if (!/^[a-zA-Z0-9_]{3,30}$/.test(username)) {
       setError(
@@ -77,7 +72,6 @@ const SignInSignUpModal = (props) => {
       password,
       username,
       avatar,
-      captchaToken,
       ...(props.refer &&
         /^[a-zA-Z0-9_]{3,30}$/.test(props.refer) && { refer: props.refer }),
     };
@@ -92,17 +86,28 @@ const SignInSignUpModal = (props) => {
     setLoading(false);
     if (!res.ok) return setError(data.message);
 
-    await signIn("credentials", { email, password, redirect: false });
+    // ✅ AUTO LOGIN WITH USERNAME
+    await signIn("credentials", {
+      username,
+      password,
+      redirect: false,
+    });
   };
+
+  /* =========================
+     SIGN IN
+  ========================= */
 
   const handleSignIn = async () => {
     setError("");
     setLoading(true);
+
     const result = await signIn("credentials", {
-      email,
+      username, // ✅ FIXED
       password,
       redirect: false,
     });
+
     setLoading(false);
     if (result?.error) setError(result.error);
   };
@@ -169,33 +174,34 @@ const SignInSignUpModal = (props) => {
               </h2>
             </div>
 
+            {/* ✅ USERNAME NOW SHOWN FOR LOGIN TOO */}
+            <div className="midO">
+              <div className="midOT">USERNAME</div>
+              <input
+                type="text"
+                name="username"
+                autoComplete="username"
+                className="midOI"
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </div>
+
             {isSignUp && (
               <div className="midO">
-                <div className="midOT">USERNAME</div>
+                <div className="midOT">EMAIL ADDRESS</div>
                 <input
-                  type="text"
-                  name="username"
-                  autoComplete="username"
+                  type="email"
+                  name="email"
+                  autoComplete="email"
                   className="midOI"
-                  placeholder="Username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
             )}
-
-            <div className="midO">
-              <div className="midOT">EMAIL ADDRESS</div>
-              <input
-                type="email"
-                name="email"
-                autoComplete="email"
-                className="midOI"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
 
             <div className="midO">
               <div className="midOT">PASSWORD</div>
@@ -240,21 +246,6 @@ const SignInSignUpModal = (props) => {
               >
                 Forgot Password?
               </button>
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                margin: "20px 0",
-              }}
-            >
-              <ReCAPTCHA
-                ref={recaptchaRef}
-                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
-                size="normal"
-                theme="light"
-              />
             </div>
 
             {error && (

@@ -1,4 +1,4 @@
-import { connectDB } from "@/lib/mongoClient";
+import { adminDB } from "@/lib/firebaseAdmin";
 import { NextResponse } from "next/server";
 
 export async function GET(req) {
@@ -6,23 +6,35 @@ export async function GET(req) {
   const username = searchParams.get("username");
 
   if (!username) {
-    return NextResponse.json({ message: "Username is required" }, { status: 400 });
+    return NextResponse.json(
+      { message: "Username is required" },
+      { status: 400 }
+    );
   }
 
   try {
-    const db = await connectDB();
-    const publishers = db.collection("publishers");
+    const publisherRef = adminDB
+      .collection("publishers")
+      .doc(username);
 
-    const publisher = await publishers.findOne({ _id: username });
+    const snap = await publisherRef.get();
 
-    if (!publisher) {
-      return NextResponse.json({ message: "Publisher not found" }, { status: 404 });
+    if (!snap.exists) {
+      return NextResponse.json(
+        { message: "Publisher not found" },
+        { status: 404 }
+      );
     }
+
+    const publisher = snap.data();
 
     return NextResponse.json({
       adUnit: publisher.adUnit || {},
     });
   } catch (error) {
-    return NextResponse.json({ message: "Server Error", error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: "Server Error", error: error.message },
+      { status: 500 }
+    );
   }
 }

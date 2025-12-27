@@ -1,7 +1,7 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth/next";
-import { connectDB } from "@/lib/mongoClient";
 import { NextResponse } from "next/server";
+import { adminDB } from "@/lib/firebaseAdmin";
 
 export async function GET(req) {
   const session = await getServerSession(authOptions);
@@ -22,10 +22,9 @@ export async function GET(req) {
   }
 
   try {
-    const db = await connectDB();
     const username = session.user.username;
 
-    // ✅ Special case: AnimeArenaX
+    // Special case: AnimeArenaX
     if (username === "AnimeArenaX") {
       const apiKey = "47e883e8ed4e810c158f9dc6937f4fd0";
       const domainId = "3943648";
@@ -49,14 +48,22 @@ export async function GET(req) {
       return NextResponse.json(json);
     }
 
-    // ✅ Fetch publisher data by username (_id = username)
-    const publisher = await db.collection("publishers").findOne({
-      _id: username,
-    });
+    // Fetch publisher data from Firestore
+    const publisherRef = adminDB.collection("publishers").doc(username);
+    const snap = await publisherRef.get();
 
-    if (!publisher || !publisher.adUnit?.id) {
+    if (!snap.exists) {
       return NextResponse.json(
-        { error: "Publisher or adUnit not found" },
+        { error: "Publisher not found" },
+        { status: 404 }
+      );
+    }
+
+    const publisher = snap.data();
+
+    if (!publisher?.adUnit?.id) {
+      return NextResponse.json(
+        { error: "Publisher adUnit not found" },
         { status: 404 }
       );
     }
@@ -81,13 +88,13 @@ export async function GET(req) {
 
     const json = await res.json();
 
-    // 🎁 Inject custom revenue
+    // Inject custom revenue
     if (
       ["Roromoazoro", "Hanimereels2", "kiml"].includes(username) &&
       json.items?.length
     ) {
       json.items = json.items.map((item) => {
-        // Inject for 2025-07-03 (1.134 revenue)
+        // Inject for 2025-07-03
         if (
           item.date === "2025-07-03" &&
           ["Roromoazoro", "kiml"].includes(username)
@@ -95,47 +102,44 @@ export async function GET(req) {
           const impressions = item.impression || 33;
           const revenue = 1.134;
           const cpm = (revenue / impressions) * 1000;
-          const ctr =
-            impressions > 0 ? (item.clicks / impressions) * 100 : 0;
+          const ctr = impressions > 0 ? (item.clicks / impressions) * 100 : 0;
 
           return {
             ...item,
             impression: impressions,
-            revenue: revenue,
+            revenue,
             cpm: parseFloat(cpm.toFixed(3)),
             ctr: parseFloat(ctr.toFixed(3)),
           };
         }
 
-        // Inject for 2025-07-12 (fixed 568 impressions, 1.3 revenue)
+        // Inject for 2025-07-12
         if (item.date === "2025-07-12" && username === "Hanimereels2") {
           const impressions = 568;
           const revenue = 1.3;
           const cpm = (revenue / impressions) * 1000;
-          const ctr =
-            impressions > 0 ? (item.clicks / impressions) * 100 : 0;
+          const ctr = impressions > 0 ? (item.clicks / impressions) * 100 : 0;
 
           return {
             ...item,
             impression: impressions,
-            revenue: revenue,
+            revenue,
             cpm: parseFloat(cpm.toFixed(3)),
             ctr: parseFloat(ctr.toFixed(3)),
           };
         }
 
-        // ✅ NEW: Inject for 2025-07-13 ($0.965 revenue)
+        // Inject for 2025-07-13
         if (item.date === "2025-07-13" && username === "Hanimereels2") {
           const impressions = item.impression || 100;
           const revenue = 0.965;
           const cpm = (revenue / impressions) * 1000;
-          const ctr =
-            impressions > 0 ? (item.clicks / impressions) * 100 : 0;
+          const ctr = impressions > 0 ? (item.clicks / impressions) * 100 : 0;
 
           return {
             ...item,
             impression: impressions,
-            revenue: revenue,
+            revenue,
             cpm: parseFloat(cpm.toFixed(3)),
             ctr: parseFloat(ctr.toFixed(3)),
           };

@@ -1,4 +1,4 @@
-import { connectDB } from "@/lib/mongoClient";
+import { adminDB } from "@/lib/firebaseAdmin";
 
 export async function GET(req) {
   try {
@@ -11,12 +11,18 @@ export async function GET(req) {
       });
     }
 
-    const db = await connectDB();
-    const publishers = db.collection("publishers");
+    const docRef = adminDB.collection("publishers").doc(userId);
+    const docSnap = await docRef.get();
 
-    const publisher = await publishers.findOne({ _id: userId }); // No ObjectId conversion
+    if (!docSnap.exists) {
+      return new Response(JSON.stringify({ error: "Ad not found" }), {
+        status: 404,
+      });
+    }
 
-    if (!publisher || !publisher.adUnit) {
+    const publisher = docSnap.data();
+
+    if (!publisher?.adUnit) {
       return new Response(JSON.stringify({ error: "Ad not found" }), {
         status: 404,
       });

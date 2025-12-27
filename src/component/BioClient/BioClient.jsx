@@ -2,10 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import "./bio.css";
-import { themeStyles, backgroundToTheme } from "@/styles/themeStyles"; // Adjust path if needed
+import { themeStyles, backgroundToTheme } from "@/styles/themeStyles";
 
 const BioClient = ({ user, publisher, referredPublisher, links, design }) => {
   const [visibleLinks, setVisibleLinks] = useState({});
+  const [openedSlab, setOpenedSlab] = useState(null);
+  const [copiedSlab, setCopiedSlab] = useState(null);
 
   useEffect(() => {
     const visibilityMap = {};
@@ -15,9 +17,32 @@ const BioClient = ({ user, publisher, referredPublisher, links, design }) => {
     setVisibleLinks(visibilityMap);
   }, [links]);
 
-  const designName = design?.split("/").pop()?.split(".")[0]; // "done" from "/done.jpg"
+  const designName = design?.split("/").pop()?.split(".")[0];
   const themeKey = backgroundToTheme[designName] || "redWhiteBlack";
   const theme = themeStyles[themeKey];
+
+  // 🔥 newest on top, oldest bottom
+  const orderedLinks = [...links]
+    .filter((link) => visibleLinks[link.id] !== false)
+    .sort((a, b) => b.id - a.id);
+
+  const handleSlabClick = async (link) => {
+    // First click → reveal URL
+    if (openedSlab !== link.id) {
+      setOpenedSlab(link.id);
+      setCopiedSlab(null);
+      return;
+    }
+
+    // Second click → copy
+    try {
+      await navigator.clipboard.writeText(link.url);
+      setCopiedSlab(link.id);
+      setTimeout(() => setCopiedSlab(null), 1500);
+    } catch (err) {
+      console.error("Copy failed", err);
+    }
+  };
 
   return (
     <div className="page-wrapper">
@@ -29,7 +54,7 @@ const BioClient = ({ user, publisher, referredPublisher, links, design }) => {
         />
 
         <div className="bio-content">
-          {/* Top Ad */}
+          {/* TOP AD */}
           <div
             className="bio-ad ad-top"
             style={{
@@ -38,37 +63,24 @@ const BioClient = ({ user, publisher, referredPublisher, links, design }) => {
             }}
           >
             <iframe
-              src={`/ad?user=${user.username}&theme=${design}&username=${user.username}`}
+              src={`/ad?user=${user.username}&theme=${design}`}
               title="Top Ad"
               scrolling="no"
-              style={{ width: "100%", height: "90px", border: "none" }}
             />
           </div>
 
-          {/* Avatar */}
+          {/* AVATAR */}
           <div
             className="bio-avatar"
             style={{
               border: `3px solid ${theme.avatarBorder}`,
               boxShadow: theme.avatarShadow,
-              background: "#000",
             }}
           >
-            <img
-              src={
-                user.username.toLowerCase() === "animearenax"
-                  ? "/arenax.jpg"
-                  : user.avatar.replace(
-                      "https://img.flawlessfiles.com/_r/100x100/100/avatar/",
-                      "https://cdn.noitatnemucod.net/avatar/100x100/"
-                    ) || "userData?.randomImage"
-              }
-              alt="avatar"
-              className="rounded-full w-24 h-24 object-cover"
-            />
+            <img src={user.avatar} alt="avatar" />
           </div>
 
-          {/* Username */}
+          {/* USERNAME */}
           <div
             className="bio-username"
             style={{
@@ -77,10 +89,10 @@ const BioClient = ({ user, publisher, referredPublisher, links, design }) => {
               boxShadow: theme.usernameShadow,
             }}
           >
-            {user.username || "username"}
+            {user.username}
           </div>
 
-          {/* Description */}
+          {/* BIO */}
           <div
             className="bio-description"
             style={{
@@ -92,47 +104,35 @@ const BioClient = ({ user, publisher, referredPublisher, links, design }) => {
             {user.bio || "bio"}
           </div>
 
-          {/* Links */}
-          <div
-            className="bio-links"
-            style={{
-              scrollbarColor: `${theme.scrollbarThumb} transparent`,
-            }}
-          >
-            {links
-              .filter((link) => visibleLinks[link.id] !== false)
-              .map((link) => (
-                <a
-                  key={link.id}
-                  href={link.url}
-                  className="bio-link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    background: theme.linkBg,
-                    color: theme.linkColor,
-                    boxShadow: theme.linkShadow,
-                    border: "1px solid rgba(255,255,255,0.3)",
-                    textShadow: "0 2px 4px rgba(0, 0, 0, 0.7)",
-                    transition: "all 0.2s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = theme.linkHoverBg;
-                    e.currentTarget.style.boxShadow = theme.linkHoverShadow;
-                    e.currentTarget.style.transform = "translateY(-2px)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = theme.linkBg;
-                    e.currentTarget.style.boxShadow = theme.linkShadow;
-                    e.currentTarget.style.transform = "translateY(0)";
-                  }}
-                >
-                  {link.name}
-                </a>
-              ))}
+          {/* SLABS */}
+          <div className="bio-links">
+            {orderedLinks.map((link) => (
+              <div
+                key={link.id}
+                className="bio-link"
+                onClick={() => handleSlabClick(link)}
+                style={{
+                  background: theme.linkBg,
+                  color: theme.linkColor,
+                  boxShadow: theme.linkShadow,
+                  cursor: "pointer",
+                  userSelect: "none",
+                }}
+              >
+                {openedSlab === link.id ? (
+                  copiedSlab === link.id ? (
+                    "Copied!"
+                  ) : (
+                    link.url
+                  )
+                ) : (
+                  link.name
+                )}
+              </div>
+            ))}
           </div>
 
-          {/* Bottom Ads */}
+          {/* BOTTOM ADS */}
           <div
             className="bio-ad ad-bottom"
             style={{
@@ -144,14 +144,12 @@ const BioClient = ({ user, publisher, referredPublisher, links, design }) => {
               src={`/ad2?theme=${design}`}
               title="Bottom Ad"
               scrolling="no"
-              style={{ width: "100%", height: "90px", border: "none" }}
             />
             {user.referredBy && (
               <iframe
                 src={`/ad?user=${user.referredBy}&theme=${design}`}
                 title="Ref Ad"
                 scrolling="no"
-                style={{ width: "100%", height: "90px", border: "none" }}
               />
             )}
           </div>

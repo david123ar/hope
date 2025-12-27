@@ -1,30 +1,43 @@
-import { NextResponse } from "next/server";
-import { connectDB } from "@/lib/mongoClient";
+import { adminDB } from "@/lib/firebaseAdmin";
 
-export async function GET(request) {
+export const GET = async (req) => {
   try {
-    const { searchParams } = new URL(request.url);
+    const { searchParams } = new URL(req.url);
     const username = searchParams.get("username");
 
-    if (!username) {
-      return NextResponse.json({ available: false, message: "Username is required" }, { status: 400 });
-    }
+    if (!username)
+      return new Response(
+        JSON.stringify({ available: false, message: "Username is required" }),
+        { status: 400 }
+      );
 
     const cleanUsername = username.trim().toLowerCase();
-    const isValid = /^[a-zA-Z0-9_-]{3,32}$/.test(cleanUsername);
-    if (!isValid) {
-      return NextResponse.json({ available: false, message: "Invalid username format" }, { status: 400 });
-    }
+    if (!/^[a-zA-Z0-9_-]{3,32}$/.test(cleanUsername))
+      return new Response(
+        JSON.stringify({
+          available: false,
+          message: "Invalid username format",
+        }),
+        { status: 400 }
+      );
 
-    const db = await connectDB();
-    const user = await db.collection("users").findOne({ username: cleanUsername });
+    const usersRef = adminDB.collection("users");
+    const query = usersRef.where("username", "==", cleanUsername);
+    const snap = await query.get();
 
-    return NextResponse.json({
-      available: !user,
-      message: user ? "This BioLynk is already claimed" : "Username is available",
-    });
+    return new Response(
+      JSON.stringify({
+        available: snap.empty,
+        message: snap.empty
+          ? "Username is available"
+          : "This username is already claimed",
+      }),
+      { status: 200 }
+    );
   } catch (error) {
-    console.error("Check username API error:", error);
-    return NextResponse.json({ available: false, message: "Internal Server Error" }, { status: 500 });
+    return new Response(
+      JSON.stringify({ available: false, message: error.message }),
+      { status: 500 }
+    );
   }
-}
+};

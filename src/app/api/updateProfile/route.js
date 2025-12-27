@@ -1,8 +1,7 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth/next";
-import { connectDB } from "@/lib/mongoClient";
+import { adminDB } from "@/lib/firebaseAdmin";
 import { hash } from "bcryptjs";
-import { ObjectId } from "mongodb";
 
 export async function POST(req) {
   try {
@@ -27,68 +26,66 @@ export async function POST(req) {
 
     const updateData = {};
 
+    const userRef = adminDB.collection("users").doc(userId);
+    const snap = await userRef.get();
+
+    if (!snap.exists) {
+      return new Response(JSON.stringify({ message: "User not found" }), {
+        status: 404,
+      });
+    }
+
+    const currentUser = snap.data();
+
     // Validate email uniqueness (if updating email)
     if (email) {
-      const db = await connectDB();
-      const users = db.collection("users");
-      const existingEmail = await users.findOne({ email });
+      const emailQuery = await adminDB
+        .collection("users")
+        .where("email", "==", email)
+        .get();
 
-      if (existingEmail && existingEmail._id.toString() !== userId) {
-        return new Response(
-          JSON.stringify({ message: "Email is already in use" }),
-          { status: 400 }
-        );
+      if (!emailQuery.empty) {
+        const docWithEmail = emailQuery.docs[0];
+        if (docWithEmail.id !== userId) {
+          return new Response(
+            JSON.stringify({ message: "Email is already in use" }),
+            { status: 400 }
+          );
+        }
       }
+
       updateData.email = email;
     }
 
-    // Validate and assign username if provided
     if (username) updateData.username = username;
-
-    // Validate and assign avatar if provided
     if (avatar) updateData.avatar = avatar;
-
     if (bio !== undefined) updateData.bio = bio;
 
-    // Validate and hash password if provided
     if (password && password.trim() !== "") {
       updateData.password = await hash(password, 10);
     }
 
-    // Return early if no updates were requested
     if (Object.keys(updateData).length === 0) {
       return new Response(JSON.stringify({ message: "No changes detected" }), {
         status: 400,
       });
     }
 
-    // Update user in the database
-    const db = await connectDB();
-    const users = db.collection("users");
+    // Update user in Firestore
+    await userRef.update(updateData);
 
-    const result = await users.updateOne(
-      { _id: new ObjectId(userId) },
-      { $set: updateData }
-    );
+    // Return only updated fields
+    const updatedResponse = {
+      message: "Profile updated successfully",
+      updated: {},
+    };
 
-    if (result.modifiedCount > 0) {
-      // Send back only the updated fields
-      const updatedResponse = {
-        message: "Profile updated successfully",
-        updated: {},
-      };
+    if (updateData.username) updatedResponse.updated.username = updateData.username;
+    if (updateData.email) updatedResponse.updated.email = updateData.email;
+    if (updateData.avatar) updatedResponse.updated.avatar = updateData.avatar;
+    if (updateData.bio !== undefined) updatedResponse.updated.bio = updateData.bio;
 
-      if (updateData.username)
-        updatedResponse.updated.username = updateData.username;
-      if (updateData.email) updatedResponse.updated.email = updateData.email;
-      if (updateData.avatar) updatedResponse.updated.avatar = updateData.avatar;
-
-      return new Response(JSON.stringify(updatedResponse), { status: 200 });
-    }
-
-    return new Response(JSON.stringify({ message: "No changes were made" }), {
-      status: 200,
-    });
+    return new Response(JSON.stringify(updatedResponse), { status: 200 });
   } catch (error) {
     return new Response(
       JSON.stringify({ message: error.message || "An error occurred" }),

@@ -1,44 +1,88 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { connectDB } from "@/lib/mongoClient";
+import { adminDB } from "@/lib/firebaseAdmin";
 
+/* ============================
+   PUT: Reorder links
+============================ */
 export async function PUT(request) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.username) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const username = session?.user?.username;
+
+  if (!username) {
+    return NextResponse.json(
+      { error: "Unauthorized" },
+      { status: 401 }
+    );
   }
 
   try {
     const { orderedIds } = await request.json();
-    if (!Array.isArray(orderedIds)) {
-      return NextResponse.json({ error: "Invalid data" }, { status: 400 });
+
+    if (!Array.isArray(orderedIds) || orderedIds.length === 0) {
+      return NextResponse.json(
+        { error: "Invalid data" },
+        { status: 400 }
+      );
     }
 
-    const db = await connectDB();
-    const collection = db.collection("links");
+    const docRef = adminDB.collection("links").doc(username);
+    const snap = await docRef.get();
 
-    const userDoc = await collection.findOne({ _id: session.user.username });
-    if (!userDoc || !Array.isArray(userDoc.links)) {
-      return NextResponse.json({ error: "No links found" }, { status: 404 });
+    if (!snap.exists) {
+      return NextResponse.json(
+        { error: "No links found" },
+        { status: 404 }
+      );
     }
 
-    const positionMap = new Map(orderedIds.map((l) => [l.id, l.position]));
+    const data = snap.data();
 
-    const updatedLinks = userDoc.links.map((link) => {
+    if (!Array.isArray(data.links)) {
+      return NextResponse.json(
+        { error: "No links found" },
+        { status: 404 }
+      );
+    }
+
+    /* --------------------------------
+       Build id → position map
+    -------------------------------- */
+    const positionMap = new Map(
+      orderedIds
+        .filter(
+          (l) =>
+            l &&
+            typeof l.id === "string" &&
+            typeof l.position === "number"
+        )
+        .map((l) => [l.id, l.position])
+    );
+
+    /* --------------------------------
+       Apply new positions
+    -------------------------------- */
+    const updatedLinks = data.links.map((link) => {
       const newPosition = positionMap.get(link.id);
       return typeof newPosition === "number"
         ? { ...link, position: newPosition }
         : link;
     });
 
-    await collection.updateOne(
-      { _id: session.user.username },
-      { $set: { links: updatedLinks } }
-    );
+    /* --------------------------------
+       Persist changes
+    -------------------------------- */
+    await docRef.update({ links: updatedLinks });
 
-    return NextResponse.json({ message: "Link order updated" });
+    return NextResponse.json({
+      message: "Link order updated",
+    });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("PUT /links/reorder error:", error);
+    return NextResponse.json(
+      { error: error.message || "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

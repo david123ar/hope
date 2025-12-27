@@ -1,10 +1,8 @@
-import { connectDB } from "@/lib/mongoClient";
 import { NextResponse } from "next/server";
+import { adminDB } from "@/lib/firebaseAdmin";
 
 export async function POST(req) {
   try {
-    const db = await connectDB();
-    const publishers = db.collection("publishers");
     const { username, adUnit } = await req.json();
 
     if (!username || !adUnit) {
@@ -23,28 +21,19 @@ export async function POST(req) {
       );
     }
 
-    const result = await publishers.updateOne(
-      { _id: username },
-      {
-        $set: {
-          adUnit: {
-            id,
-            index,
-            apiKey,
-            scriptUrl,
-            containerId,
-            clickUrl,
-          },
-        },
-      }
-    );
+    const publisherRef = adminDB.collection("publishers").doc(username);
+    const snap = await publisherRef.get();
 
-    if (result.modifiedCount === 0) {
+    if (!snap.exists) {
       return NextResponse.json(
-        { message: "Failed to update adUnit. Publisher not found." },
+        { message: "Publisher not found" },
         { status: 404 }
       );
     }
+
+    await publisherRef.update({
+      adUnit: { id, index, apiKey, scriptUrl, containerId, clickUrl },
+    });
 
     return NextResponse.json({ message: "Ad unit updated successfully" });
   } catch (err) {

@@ -1,34 +1,36 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { connectDB } from "@/lib/mongoClient";
+import { adminDB } from "@/lib/firebaseAdmin";
+import { FieldValue } from "firebase-admin/firestore";
 import { randomUUID } from "crypto";
 
-// POST: Add a new link and ensure default design exists
+/* ============================
+   AUTH HELPER
+============================ */
+async function getUser(session) {
+  return session?.user?.username || null;
+}
+
+/* ============================
+   POST: Add new link
+============================ */
 export async function POST(request) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.username) {
+  const username = await getUser(session);
+
+  if (!username) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
     const { name, url, visible } = await request.json();
+
     if (!name || !url || typeof visible !== "boolean") {
       return NextResponse.json({ error: "Missing data" }, { status: 400 });
     }
 
-    const db = await connectDB();
-    const links = db.collection("links");
-
-    // Ensure user document has default design
-    const existingUser = await links.findOne({ _id: session.user.username });
-    if (!existingUser?.design) {
-      await links.updateOne(
-        { _id: session.user.username },
-        { $set: { design: "/done.jpeg" } },
-        { upsert: true }
-      );
-    }
+    const docRef = adminDB.collection("links").doc(username);
 
     const link = {
       id: randomUUID(),
@@ -38,113 +40,175 @@ export async function POST(request) {
       position: Date.now(),
     };
 
-    await links.updateOne(
-      { _id: session.user.username },
+    // SAFE: creates doc if missing, appends link, keeps design
+    await docRef.set(
       {
-        $push: {
-          links: {
-            $each: [link],
-            $position: 0, // Insert at top
-          },
-        },
+        design: "/done.jpeg",
+        links: FieldValue.arrayUnion(link),
       },
-      { upsert: true }
+      { merge: true }
     );
 
     return NextResponse.json({ message: "Link stored" });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("POST /links error:", error);
+    return NextResponse.json(
+      { error: error.message || "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
 
-// DELETE: Remove a link by id
+/* ============================
+   DELETE: Remove link by id
+============================ */
 export async function DELETE(request) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.username) {
+  const username = await getUser(session);
+
+  if (!username) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
     const { id } = await request.json();
-    const db = await connectDB();
+    if (!id) {
+      return NextResponse.json({ error: "Missing link ID" }, { status: 400 });
+    }
 
-    await db.collection("links").updateOne(
-      { _id: session.user.username },
-      { $pull: { links: { id } } }
+    const docRef = adminDB.collection("links").doc(username);
+    const snap = await docRef.get();
+
+    if (!snap.exists) {
+      return NextResponse.json({ error: "No links found" }, { status: 404 });
+    }
+
+    const data = snap.data();
+    const updatedLinks = (data.links || []).filter(
+      (link) => link.id !== id
     );
+
+    await docRef.update({ links: updatedLinks });
 
     return NextResponse.json({ message: "Link deleted" });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("DELETE /links error:", error);
+    return NextResponse.json(
+      { error: error.message || "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
 
-// PUT: Update a specific field of a specific link
+/* ============================
+   PUT: Update link field
+============================ */
 export async function PUT(request) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.username) {
+  const username = await getUser(session);
+
+  if (!username) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
     const { id, field, value } = await request.json();
-    const db = await connectDB();
 
-    await db.collection("links").updateOne(
-      { _id: session.user.username, "links.id": id },
-      { $set: { [`links.$.${field}`]: value } }
+    if (!id || !field) {
+      return NextResponse.json({ error: "Missing data" }, { status: 400 });
+    }
+
+    const docRef = adminDB.collection("links").doc(username);
+    const snap = await docRef.get();
+
+    if (!snap.exists) {
+      return NextResponse.json({ error: "No links found" }, { status: 404 });
+    }
+
+    const data = snap.data();
+    const updatedLinks = (data.links || []).map((link) =>
+      link.id === id ? { ...link, [field]: value } : link
     );
+
+    await docRef.update({ links: updatedLinks });
 
     return NextResponse.json({ message: "Link updated" });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("PUT /links error:", error);
+    return NextResponse.json(
+      { error: error.message || "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
 
-// GET: Get all links sorted by descending position + design
+/* ============================
+   GET: Fetch links + design
+============================ */
 export async function GET() {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.username) {
+  const username = await getUser(session);
+
+  if (!username) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const db = await connectDB();
-    const doc = await db.collection("links").findOne({ _id: session.user.username });
+    const docRef = adminDB.collection("links").doc(username);
+    const snap = await docRef.get();
 
-    // 🔁 Sort in descending order so latest appears first
-    const sortedLinks = doc?.links;
-    const design = doc?.design || "/done.jpeg";
+    const data = snap.exists
+      ? snap.data()
+      : { links: [], design: "/done.jpeg" };
 
-    return NextResponse.json({ links: sortedLinks, design });
+    const sortedLinks = (data.links || []).sort(
+      (a, b) => b.position - a.position
+    );
+
+    return NextResponse.json({
+      links: sortedLinks,
+      design: data.design || "/done.jpeg",
+    });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("GET /links error:", error);
+    return NextResponse.json(
+      { error: error.message || "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
 
-
-// PATCH: Save selected design
+/* ============================
+   PATCH: Update design
+============================ */
 export async function PATCH(request) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.username) {
+  const username = await getUser(session);
+
+  if (!username) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
     const { design } = await request.json();
+
     if (!design) {
-      return NextResponse.json({ error: "Design not provided" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Design not provided" },
+        { status: 400 }
+      );
     }
 
-    const db = await connectDB();
-    await db.collection("links").updateOne(
-      { _id: session.user.username },
-      { $set: { design } },
-      { upsert: true }
-    );
+    const docRef = adminDB.collection("links").doc(username);
+
+    await docRef.set({ design }, { merge: true });
 
     return NextResponse.json({ message: "Design updated successfully" });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("PATCH /links error:", error);
+    return NextResponse.json(
+      { error: error.message || "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
