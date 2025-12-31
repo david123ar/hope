@@ -94,7 +94,7 @@ export default function PaymentInfo() {
   return (
     <>
       <SessionProvider>
-        <Navbar />
+        <Navbar theme="ember"/>
         <div className="payment-info-wrapper">
           <div className="payment-info-container">
             <h2>Payment Information</h2>

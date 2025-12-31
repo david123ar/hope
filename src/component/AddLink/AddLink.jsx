@@ -189,14 +189,7 @@ const AddLink = (props) => {
     if (session?.user) {
       setUser(session.user.username || "");
       setBio(session.user.bio || "");
-      setNewAvatar(
-        session.user.avatar.replace(
-          "https://img.flawlessfiles.com/_r/100x100/100/avatar/",
-          "https://cdn.noitatnemucod.net/avatar/100x100/"
-        ) ||
-          "userData?.randomImage" ||
-          ""
-      );
+      setNewAvatar(session.user.avatar || "");
     }
   }, [session]);
 
@@ -424,7 +417,7 @@ const AddLink = (props) => {
 
   return (
     <>
-      <Navbar />
+      <Navbar theme="blue" />
       {showModali && (
         <div className="avatar-modal" onClick={() => setShowModali(false)}>
           <div className="modal-conten" onClick={(e) => e.stopPropagation()}>
@@ -590,7 +583,7 @@ const AddLink = (props) => {
             )}
 
             <Share
-              ShareUrl={`https://biolynk.shoko.fun/${session?.user?.username}${
+              ShareUrl={`https://henpro.fun/${session?.user?.username}${
                 props.refer ? `?refer=${props.refer}` : ``
               }`}
             />
@@ -783,20 +776,20 @@ const AddLink = (props) => {
             }`}
           /> */}
           <Link
-            href={`https://biolynk.shoko.fun/${session?.user?.username}${
+            href={`https://henpro.fun/${session?.user?.username}${
               props.refer ? `?refer=${props.refer}` : ``
             }`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block mt-5 bg-[#00f2fe] text-black font-semibold px-5 py-2 rounded-lg hover:bg-[#00d8e0] transition duration-300 ease-in-out"
           >
-            Visit your biolynk
+            Visit your Henpro
           </Link>
         </div>
       </div>
       <BottomNavBar />
       <div className="fiiter">
-        <Footer />
+        <Footer theme="blue"/>
       </div>
     </>
   );

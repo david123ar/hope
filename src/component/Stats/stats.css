@@ -1,18 +1,22 @@
 :root {
-  --accent: #1e90ff;
-  --text: #eaeaea;
-  --border: #444;
-  --bg: #0f172a;
-  --card-bg: #1e293b;
-  --hover: #273549;
+  --accent: #c7f000;
+  --accent-soft: #9bdc28;
+  --text: #f1f5f9;
+  --muted-text: #a1a1aa;
+  --border: #2e3a1f;
+  --bg: #0b1206;
+  --card-bg: #121f0b;
+  --hover: #1b2f10;
 }
 
+/* ===============================
+   PAGE LAYOUT
+================================ */
 .stats-container {
   min-height: 100vh;
   width: 100vw;
   background-color: var(--bg);
   padding: 2rem 1rem;
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -21,45 +25,61 @@
 .stats-title {
   font-size: 2rem;
   margin-bottom: 2rem;
-  color: var(--text);
-  text-align: center;
   margin-top: 65px;
+  color: var(--accent);
+  letter-spacing: 0.5px;
 }
 
+/* ===============================
+   CONTROLS
+================================ */
 .stats-controls {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 1rem;
-  margin-bottom: 2rem;
-  justify-content: center;
   width: 100%;
-  max-width: 800px;
+  max-width: 900px;
+  margin-bottom: 2rem;
 }
 
-.datepicker-wrapper {
-  display: flex;
-  flex-direction: column;
-}
-
-.datepicker-wrapper label {
+.stats-controls label {
+  font-size: 0.8rem;
+  color: var(--muted-text);
   margin-bottom: 0.3rem;
-  color: var(--text);
+  display: block;
 }
 
+.stats-controls input,
+.stats-controls select,
 .custom-datepicker {
   background: var(--card-bg);
   color: var(--text);
-  border-radius: 6px;
   border: 1px solid var(--border);
+  border-radius: 8px;
   padding: 0.6rem 0.8rem;
   font-size: 0.9rem;
-  width: 180px;
+  transition: all 0.2s ease;
 }
 
-.custom-datepicker::placeholder {
-  color: #aaa;
+.stats-controls input::placeholder {
+  color: var(--muted-text);
 }
 
+.stats-controls select {
+  cursor: pointer;
+}
+
+.stats-controls input:focus,
+.stats-controls select:focus,
+.custom-datepicker:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(199, 240, 0, 0.25);
+}
+
+/* ===============================
+   SUMMARY CARDS
+================================ */
 .stats-summary {
   display: flex;
   gap: 1rem;
@@ -70,31 +90,33 @@
 
 .card {
   background: var(--card-bg);
-  color: var(--text);
-  border-radius: 8px;
-  padding: 1rem;
-  font-size: 1rem;
-  font-weight: 500;
-  text-align: center;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.6);
-  transition: transform 0.2s;
+  border-radius: 12px;
+  padding: 1.1rem;
   min-width: 150px;
-  max-width: 200px;
-  flex: 1 1 150px;
+  flex: 1 1 160px;
+  border: 1px solid var(--border);
+  text-align: center;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+  transition: all 0.2s ease;
 }
 
 .card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
   background-color: var(--hover);
+  box-shadow: 0 8px 20px rgba(199, 240, 0, 0.18);
 }
 
 .card span {
   display: block;
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-top: 0.3rem;
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-top: 0.4rem;
+  color: var(--accent);
 }
 
+/* ===============================
+   TABLE
+================================ */
 .stats-table-wrapper {
   width: 100%;
   overflow-x: auto;
@@ -102,70 +124,67 @@
 
 .stats-table {
   width: 100%;
-  max-width: 1000px;
+  max-width: 1100px;
   border-collapse: collapse;
   margin: 0 auto;
-  color: var(--text);
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 .stats-table th,
 .stats-table td {
   border: 1px solid var(--border);
-  padding: 0.6rem;
+  padding: 0.65rem;
   font-size: 0.85rem;
   text-align: center;
   white-space: nowrap;
 }
 
 .stats-table thead {
-  background-color: var(--accent);
-  color: #fff;
-}
-
-.stats-table tbody tr:hover {
-  background-color: var(--hover);
+  background: linear-gradient(90deg, #c7f000, #9bdc28);
+  color: #000;
 }
 
 .stats-table th {
   cursor: pointer;
-  transition: background 0.2s;
 }
 
-.stats-table th:hover {
-  background: #3399ff;
+.stats-table tbody tr:hover {
+  background-color: rgba(199, 240, 0, 0.08);
 }
 
+/* ===============================
+   LOADING
+================================ */
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: var(--muted-text);
+}
+
+/* ===============================
+   MOBILE
+================================ */
 @media (max-width: 600px) {
   .stats-title {
-    font-size: 1.5rem;
-  }
-
-  .stats-controls {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .custom-datepicker {
-    width: 100%;
+    font-size: 1.4rem;
   }
 
   .stats-summary {
-    gap: 0.5rem;
+    gap: 0.6rem;
   }
 
   .card {
-    padding: 0.75rem;
-    font-size: 0.9rem;
-    max-width: 100%;
+    padding: 0.8rem;
   }
 
   .card span {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
 
   .stats-table th,
   .stats-table td {
     font-size: 0.75rem;
-    padding: 0.4rem;
+    padding: 0.45rem;
   }
 }

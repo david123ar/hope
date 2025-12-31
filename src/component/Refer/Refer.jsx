@@ -6,7 +6,7 @@ import Navbar from "@/component/Navbar/Navbar";
 
 export default function ReferEarn() {
   const { data: session, status } = useSession();
-  const referralUrl = `https://biolynk.shoko.fun/?ref=${session?.user?.username}`; // Replace dynamically as needed
+  const referralUrl = `https://henpro.fun/?ref=${session?.user?.username}`; // Replace dynamically as needed
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -17,7 +17,8 @@ export default function ReferEarn() {
 
   return (
     <>
-      <Navbar />
+
+      <Navbar theme="aurora" />
       <div className="refer-wrapper">
         <div className="refer-container">
           <h2>Refer & Earn</h2>
@@ -52,6 +53,7 @@ export default function ReferEarn() {
           </p>
         </div>
       </div>
+
     </>
   );
 }

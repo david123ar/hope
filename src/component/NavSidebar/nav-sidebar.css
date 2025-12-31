@@ -1,19 +1,16 @@
+/* ===== Overlay ===== */
 .navigation-sidebar {
   position: fixed;
-  transition: all 0.2s ease-in-out;
+  inset: 0;
   min-height: 100vh;
   width: 100%;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  background: rgba(36, 36, 40, 0.8);
-  backdrop-filter: blur(10px);
+  background: rgba(5, 5, 15, 0.75);
+  backdrop-filter: blur(14px);
+  transition: opacity 0.2s ease;
   z-index: -1;
-  transition: all 0.1s ease-in-out;
 }
-.close-menu {
-  cursor: pointer;
-}
+
+/* ===== Sidebar panel ===== */
 .navigation-list {
   position: fixed;
   top: 0;
@@ -22,69 +19,133 @@
   height: 100vh;
   z-index: 100;
   overflow-y: auto;
+  display: flex;
   flex-direction: column;
   row-gap: 20px;
-  background: rgba(255, 255, 255, 0.1);
-  transition: all 0.2s ease-in-out;
+
+  background: linear-gradient(
+    180deg,
+    rgba(18, 12, 43, 0.95),
+    rgba(10, 15, 30, 0.98)
+  );
+
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow:
+    10px 0 40px rgba(0, 0, 0, 0.6),
+    0 0 40px color-mix(in srgb, var(--theme-soft) 25%, transparent);
+
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+/* Hide scrollbar */
 .navigation-list::-webkit-scrollbar {
   display: none;
 }
+
+/* ===== Close button ===== */
+.close-menu {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--theme-soft);
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.close-menu:hover {
+  color: var(--theme);
+  transform: translateX(-4px);
+}
+
+/* ===== Button group ===== */
 .button-group {
   padding-top: 20px;
 }
+
 .button-group > * {
   padding: 10px 15px;
-  border-radius: 20px;
-  background: var(--dark);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.6);
   text-align: center;
-  text-decoration: none;
   margin-bottom: 10px;
   font-size: 12px;
-  margin-inline: 10px;
-}
-.button-group label {
-  padding-block: 10px;
-  cursor: pointer;
-}
-.button-group a {
-  background: black !important;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--theme);
-  gap: 3px;
+  margin-inline: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+/* ===== Links list ===== */
 .navigation-link-list ul {
   list-style: none;
-  padding: 0 !important;
+  padding: 0;
+  margin: 0;
 }
+
 .navigation-link-list ul li {
   width: 100%;
 }
+
+/* ===== Sidebar links ===== */
 .navigation-link-list ul li a {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
   text-decoration: none;
-  color: white;
-  padding-block: 15px;
-  padding-left: 20px;
-  border-bottom: 1px solid rgba(128, 128, 128, 0.338);
-  transition: all 0.1s ease;
-}
-.navigation-link-list ul li a:hover {
-  color: var(--theme);
-  background-color: var(--dark);
-}
-.action-grop {
-  margin-inline: 0;
-  border-radius: 0;
-}
-.lupe {
-  display: flex !important;
-  align-items: center !important;
-  gap: 10px;
+  color: #e5e7eb;
+  font-size: 15px;
+  position: relative;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.2s ease;
 }
 
-.lupe:hover {
+/* Icon */
+.navigation-link-list ul li a svg {
+  font-size: 18px;
+  color: var(--theme-soft);
+  transition: all 0.2s ease;
+}
+
+/* Hover effect */
+.navigation-link-list ul li a:hover {
   color: var(--theme);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--theme) 18%, transparent),
+    transparent
+  );
+}
+
+/* Glow bar on hover */
+.navigation-link-list ul li a::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 3px;
+  height: 0%;
+  background: linear-gradient(
+    180deg,
+    var(--theme),
+    var(--theme-soft)
+  );
+  transform: translateY(-50%);
+  border-radius: 2px;
+  transition: height 0.2s ease;
+}
+
+.navigation-link-list ul li a:hover::before {
+  height: 60%;
+}
+
+/* Icon glow on hover */
+.navigation-link-list ul li a:hover svg {
+  color: var(--theme);
+  filter: drop-shadow(0 0 6px var(--theme-soft));
+}
+
+/* ===== Utility ===== */
+.lupe {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }

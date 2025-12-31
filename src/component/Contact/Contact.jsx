@@ -46,7 +46,7 @@ export default function Contact() {
   return (
     <>
       <SessionProvider>
-        <Navbar />
+        <Navbar theme="amber"/>
         <div className="contact-wrapper">
           <div className="contact-container">
             <h2>Contact Us</h2>

@@ -9,7 +9,7 @@ export default function Help() {
   return (
     <>
       <SessionProvider>
-        <Navbar />
+        <Navbar theme="purple"/>
         <div className="help-wrapper">
           <div className="help-container">
             <h1>Help Center</h1>

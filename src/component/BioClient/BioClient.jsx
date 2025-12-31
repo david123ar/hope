@@ -22,9 +22,11 @@ const BioClient = ({ user, publisher, referredPublisher, links, design }) => {
   const theme = themeStyles[themeKey];
 
   // 🔥 newest on top, oldest bottom
+  // 🔥 newest on top, oldest at bottom
   const orderedLinks = [...links]
     .filter((link) => visibleLinks[link.id] !== false)
-    .sort((a, b) => b.id - a.id);
+    .sort((a, b) => b.position - a.position);
+
 
   const handleSlabClick = async (link) => {
     // First click → reveal URL

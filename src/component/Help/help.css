@@ -1,7 +1,13 @@
 .help-wrapper {
   width: 99vw;
   min-height: 100vh;
-  background-color: #0f172a; /* Dark background */
+  background:
+    radial-gradient(
+      circle at top,
+      rgba(124, 58, 237, 0.18),
+      transparent 40%
+    ),
+    linear-gradient(180deg, #070617, #090b1f);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -9,68 +15,115 @@
   box-sizing: border-box;
 }
 
+/* Card */
 .help-container {
   text-align: center;
-  padding: 2rem;
-  background-color: #1e293b;
-  border-radius: 12px;
-  box-shadow: 0 0 20px #00f2fe55;
+  padding: 2.2rem;
+  background: linear-gradient(
+    160deg,
+    #120c2b,
+    #0b0f24
+  );
+  border-radius: 16px;
+  box-shadow:
+    0 0 25px rgba(99, 102, 241, 0.25),
+    0 0 60px rgba(34, 211, 238, 0.15);
   box-sizing: border-box;
   max-width: 600px;
   width: 100%;
   margin-top: 65px;
+  border: 1px solid rgba(99, 102, 241, 0.35);
 }
 
+/* Title */
 .help-container h1 {
-  font-size: 2.5rem;
-  color: #00f2fe;
-  margin-bottom: 0.5rem;
+  font-size: 2.6rem;
+  margin-bottom: 0.6rem;
+  background: linear-gradient(
+    90deg,
+    #a855f7,
+    #22d3ee
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
+/* Subtitle */
 .subtitle {
-  color: #94a3b8;
+  color: #c7d2fe;
+  opacity: 0.85;
   margin-bottom: 2rem;
   font-size: 1.1rem;
 }
 
+/* Coming Soon badge */
 .coming-soon {
-  background-color: #00f2fe;
-  color: #0f172a;
-  padding: 0.8rem 2rem;
-  border-radius: 8px;
+  background: linear-gradient(
+    135deg,
+    #a855f7,
+    #22d3ee
+  );
+  color: #050816;
+  padding: 0.85rem 2.2rem;
+  border-radius: 999px;
   display: inline-block;
   font-size: 1.25rem;
-  font-weight: bold;
-  box-shadow: 0 4px 14px #00f2fe66;
-  transition: transform 0.3s ease;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  box-shadow:
+    0 0 18px rgba(168, 85, 247, 0.5),
+    0 0 40px rgba(34, 211, 238, 0.35);
+  transition: all 0.35s ease;
 }
 
+/* Hover animation */
 .coming-soon:hover {
-  transform: scale(1.05);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow:
+    0 0 30px rgba(168, 85, 247, 0.7),
+    0 0 70px rgba(34, 211, 238, 0.45);
 }
 
-@media screen and (max-width: 600px) {
-  .help-container h1 {
-    font-size: 2rem;
-  }
-
-  .coming-soon {
-    font-size: 1rem;
-    padding: 0.6rem 1.5rem;
-  }
-}
+/* Footer note */
 .help-note {
-  margin-top: 1.5rem;
+  margin-top: 1.8rem;
   font-size: 0.95rem;
-  color: #cbd5e1;
+  color: #e0e7ff;
+  opacity: 0.9;
 }
 
+/* Link */
 .help-note a {
-  color: #00f2fe;
-  font-weight: 600;
-  text-decoration: underline;
+  color: #22d3ee;
+  font-weight: 700;
+  text-decoration: none;
+  position: relative;
+}
+
+/* Underline glow */
+.help-note a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #a855f7, #22d3ee);
+  opacity: 0.7;
 }
 
 .help-note a:hover {
-  color: #38bdf8;
+  color: #a855f7;
+}
+
+/* Responsive */
+@media screen and (max-width: 600px) {
+  .help-container h1 {
+    font-size: 2.1rem;
+  }
+
+  .coming-soon {
+    font-size: 1.05rem;
+    padding: 0.65rem 1.7rem;
+  }
 }

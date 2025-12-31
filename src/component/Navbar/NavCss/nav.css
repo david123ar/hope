@@ -1,163 +1,218 @@
+/* ===============================
+   NAVBAR SEPARATOR
+================================ */
+.nav-1::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+
+  background: linear-gradient(90deg, transparent, var(--theme), transparent);
+
+  opacity: 0.6;
+}
+
+/* ===============================
+   THEME SYSTEM
+================================ */
+.theme-lime {
+  --theme: #c7f000;
+  --theme-soft: #9bdc28;
+  --nav-bg: rgba(10, 15, 6, 0.85);
+}
+
+.theme-blue {
+  --theme: #4facfe;
+  --theme-soft: #00f2fe;
+  --nav-bg: rgba(8, 12, 18, 0.85);
+}
+
+.theme-purple {
+  --theme: #a855f7;        /* Primary purple */
+  --theme-soft: #22d3ee;   /* Cyan accent */
+  --nav-bg: rgba(12, 10, 30, 0.88);
+}
+
+
+/* ===============================
+   AMBER THEME (DESIGN PAGE)
+================================ */
+.theme-amber {
+  --theme: #fbbf24;        /* Amber yellow */
+  --theme-soft: #fb923c;   /* Orange */
+  --theme-hot: #f97316;    /* Deep orange */
+  --glow: rgba(251,191,36,0.45);
+
+  --nav-bg: rgba(18, 12, 5, 0.88);
+  --nav-border: rgba(251,191,36,0.25);
+}
+
+
+/* ===============================
+   ROYAL THEME
+================================ */
+.theme-royal {
+  --theme: #7c3aed; /* Royal purple */
+  --theme-soft: #c084fc; /* Soft lavender */
+  --nav-bg: rgba(15, 10, 25, 0.88);
+  --glow: rgba(124, 58, 237, 0.35);
+}
+
+/* ===============================
+   THEME – SUNSET EMBER
+================================ */
+.theme-ember {
+  --theme: #fb923c; /* Main Ember Orange */
+  --theme-soft: #f97316; /* Mid Orange */
+  --theme-hot: #ef4444; /* Hot Red */
+  --nav-bg: rgba(11, 11, 15, 0.85); /* Navbar background */
+  --glow: rgba(251, 146, 60, 0.35); /* Shadow / Glow */
+}
+
+/* ===============================
+   THEME – AURORA GOLD (REFER & EARN)
+================================ */
+.theme-aurora {
+  --theme: #facc15; /* Gold */
+  --theme-soft: #fde68a; /* Soft gold */
+  --theme-hot: #f59e0b; /* Amber */
+  --nav-bg: rgba(20, 18, 5, 0.9);
+  --glow: rgba(250, 204, 21, 0.45);
+}
+
+/* ===============================
+   NAVBAR BASE
+================================ */
 .nav-1 {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  position: fixed !important;
+  align-items: center;
   height: 65px;
   width: 100%;
-  z-index: 80;
+  position: fixed;
   top: 0;
-  max-width: 1920px;
-  margin: auto;
+  z-index: 80;
+  padding: 0 10px;
+  transition: all 0.3s ease;
+}
 
-  /* background-color: rgba(46, 49, 45, 0.8); */
+.darkio {
+  background: var(--nav-bg);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+}
+
+/* ===============================
+   LEFT SIDE
+================================ */
+.nav-in {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.barr {
+  cursor: pointer;
+  transition: color 0.2s;
 }
 
 .barr:hover {
   color: var(--theme);
-  cursor: pointer;
 }
 
-.nav-in {
-  display: flex;
-  align-items: center;
-  justify-content: start;
-  gap: 30px;
-  padding: 10px;
-}
-.darkio {
-  background-color: rgba(46, 49, 45, 0.8); /* 50% transparency */
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-}
-.nav-end {
-  display: flex;
-  align-items: center;
-  margin-right: 10px;
-  gap: 10px;
-}
-.nav-ser {
-  display: none;
-}
-.social-links {
-  padding-left: 40px;
-  padding-right: 20px;
-  border-left: 1px solid #757575;
-}
-.nav-log {
-  padding: 5px 10px;
-  background: var(--theme);
-  font-size: 13px;
-  font-weight: 600;
-  color: #1a1a1a;
-  border-radius: 5px;
-  text-align: center;
-}
-.float-ser {
-  display: none;
-}
-/* .searc {
-  z-index: 100;
-} */
-.logo {
-  max-height: 40px !important;
-}
-/* Navbar Logo Container */
+/* ===============================
+   LOGO
+================================ */
 .logo-container {
   display: flex;
   align-items: center;
-  gap: 10px; /* Spacing between the icon and text */
+  gap: 10px;
 }
 
-/* Crescent Moon Icon */
 .logo-icon {
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(145deg, #ffffff, #00f2fe);
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  position: relative;
-  box-shadow: 0 0 10px rgba(0, 242, 254, 0.7);
+  background: radial-gradient(circle, var(--theme), transparent 70%);
+  box-shadow: 0 0 12px var(--theme);
 }
 
-.logo-icon::after {
-  content: "";
-  width: 30px;
-  height: 30px;
-  background: #1a1a1a;
-  border-radius: 50%;
-  position: absolute;
-  top: 5px;
-  left: 7px;
-}
-
-/* Logo Text */
 .logo-text {
-  font-size: 1.5rem;
+  font-size: 1.45rem;
   font-weight: 800;
-  text-transform: uppercase;
-  background: linear-gradient(90deg, #4facfe, #00f2fe, #e91e63, #ffeb3b);
-  background-size: 200%;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, var(--theme), var(--theme-soft));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: gradientFlow 4s infinite;
-  white-space: nowrap; /* Prevents text wrapping */
+}
+
+/* ===============================
+   ROUTE HIGHLIGHT
+================================ */
+.social-links {
+  padding-left: 25px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.route-pill {
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.route-pill.active {
+  background: linear-gradient(90deg, var(--theme), var(--theme-soft));
+  color: #000;
+  box-shadow: 0 0 12px rgba(199, 240, 0, 0.4);
+}
+
+/* ===============================
+   RIGHT SIDE
+================================ */
+.nav-end {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-log {
+  background: var(--theme);
+  color: #000;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(199, 240, 0, 0.4);
 }
 
 .profile-ico {
-  height: 36.5px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   cursor: pointer;
+  border: 2px solid var(--theme);
+  box-shadow: 0 0 12px rgba(199, 240, 0, 0.4);
 }
 
-/* Keyframe Animation for Gradient */
-@keyframes gradientFlow {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-@media screen and (max-width: 1300px) {
-  .searc {
-    display: none;
-  }
-  .float-ser {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    position: fixed !important;
-    height: 65px;
-    width: 100%;
-    z-index: 90;
-    top: 60px;
-    max-width: 1920px;
-    margin: auto;
-  }
-  .nav-ser {
-    display: block;
-  }
-}
-
-@media screen and (max-width: 1100px) {
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 1100px) {
   .social-links {
     display: none;
   }
 }
 
-@media screen and (max-width: 790px) {
+@media (max-width: 800px) {
   .nav-action {
     display: none;
   }
   .nav-in {
-    gap: 10px;
-  }
-}
-@media screen and (max-width: 704px) {
-  .nav-1 {
-    /* background: var(--dark); */
+    gap: 12px;
   }
 }

@@ -100,7 +100,7 @@ export default function Design(props) {
 
   return (
     <>
-      <Navbar />
+      <Navbar theme="blue"/>
       <div className="oit">
         {/* LEFT SIDE (DESIGN PICKER) */}
         <div className={`oit-in ${isView ? "hidde" : "activa"}`}>
@@ -142,7 +142,7 @@ export default function Design(props) {
               </div>
             ))}
             <Share
-              ShareUrl={`https://biolynk.shoko.fun/${session?.user?.username}${
+              ShareUrl={`https://henpro.fun/${session?.user?.username}${
                 props.refer ? `?refer=${props.refer}` : ``
               }`}
             />
@@ -284,18 +284,18 @@ export default function Design(props) {
           </div>
 
           <Link
-            href={`https://biolynk.shoko.fun/${session?.user?.username}${
+            href={`https://henpro.fun/${session?.user?.username}${
               props.refer ? `?refer=${props.refer}` : ``
             }`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block mt-5 bg-[#00f2fe] text-black font-semibold px-5 py-2 rounded-lg hover:bg-[#00d8e0] transition duration-300 ease-in-out"
           >
-            Visit your biolynk
+            Visit your Henpro
           </Link>
         </div>
       </div>
-      <Footer />
+      <Footer theme="blue"/>
     </>
   );
 }
