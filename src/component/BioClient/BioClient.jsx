@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import "./bio.css";
 import { themeStyles, backgroundToTheme } from "@/styles/themeStyles";
 
-const BioClient = ({ user, publisher, referredPublisher, links, design }) => {
+const BioClient = ({ user, publisher, referredPublisher, username , links, design }) => {
   const [visibleLinks, setVisibleLinks] = useState({});
   const [openedSlab, setOpenedSlab] = useState(null);
   const [copiedSlab, setCopiedSlab] = useState(null);
@@ -22,21 +22,17 @@ const BioClient = ({ user, publisher, referredPublisher, links, design }) => {
   const theme = themeStyles[themeKey];
 
   // 🔥 newest on top, oldest bottom
-  // 🔥 newest on top, oldest at bottom
   const orderedLinks = [...links]
     .filter((link) => visibleLinks[link.id] !== false)
     .sort((a, b) => b.position - a.position);
 
-
   const handleSlabClick = async (link) => {
-    // First click → reveal URL
     if (openedSlab !== link.id) {
       setOpenedSlab(link.id);
       setCopiedSlab(null);
       return;
     }
 
-    // Second click → copy
     try {
       await navigator.clipboard.writeText(link.url);
       setCopiedSlab(link.id);
@@ -59,13 +55,10 @@ const BioClient = ({ user, publisher, referredPublisher, links, design }) => {
           {/* TOP AD */}
           <div
             className="bio-ad ad-top"
-            style={{
-              background: theme.adBg,
-              boxShadow: theme.adShadow,
-            }}
+            style={{ background: theme.adBg, boxShadow: theme.adShadow }}
           >
             <iframe
-              src={`/ad?user=${user.username}&theme=${design}`}
+              src={`/ad?user=${username}&theme=${design}`}
               title="Top Ad"
               scrolling="no"
             />
@@ -106,7 +99,7 @@ const BioClient = ({ user, publisher, referredPublisher, links, design }) => {
             {user.bio || "bio"}
           </div>
 
-          {/* SLABS */}
+          {/* LINKS (SCROLLABLE ONLY AREA) */}
           <div className="bio-links">
             {orderedLinks.map((link) => (
               <div
@@ -117,19 +110,13 @@ const BioClient = ({ user, publisher, referredPublisher, links, design }) => {
                   background: theme.linkBg,
                   color: theme.linkColor,
                   boxShadow: theme.linkShadow,
-                  cursor: "pointer",
-                  userSelect: "none",
                 }}
               >
-                {openedSlab === link.id ? (
-                  copiedSlab === link.id ? (
-                    "Copied!"
-                  ) : (
-                    link.url
-                  )
-                ) : (
-                  link.name
-                )}
+                {openedSlab === link.id
+                  ? copiedSlab === link.id
+                    ? "Copied!"
+                    : link.url
+                  : link.name}
               </div>
             ))}
           </div>
@@ -137,10 +124,7 @@ const BioClient = ({ user, publisher, referredPublisher, links, design }) => {
           {/* BOTTOM ADS */}
           <div
             className="bio-ad ad-bottom"
-            style={{
-              background: theme.adBg,
-              boxShadow: theme.adShadow,
-            }}
+            style={{ background: theme.adBg, boxShadow: theme.adShadow }}
           >
             <iframe
               src={`/ad2?theme=${design}`}

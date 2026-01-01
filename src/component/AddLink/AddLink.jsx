@@ -238,7 +238,7 @@ const AddLink = (props) => {
 
   const handleAddReferralLink = () => {
     setName("Referral Link");
-    setUrl(`https://biolynk.shoko.fun/?ref=${session?.user?.username}`); // <-- Replace with your actual referral link
+    setUrl(`https://henpro.fun/?ref=${session?.user?.username}`); // <-- Replace with your actual referral link
     setIsAdding(true);
   };
 

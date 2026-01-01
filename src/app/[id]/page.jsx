@@ -130,6 +130,7 @@ export default async function BioPage({ params }) {
       user={user}
       publisher={publisher}
       referredPublisher={referredPublisher}
+      username={username}
       links={links}
       design={design}
     />
