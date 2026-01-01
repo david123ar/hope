@@ -24,7 +24,6 @@ const Page = () => {
         .replace("/", "")
         .replace(".jpg", "")
         .replace(".jpeg", "");
-
       const themeName = backgroundToTheme[cleanedTheme] || cleanedTheme;
 
       // ✅ fallback to red if invalid
@@ -33,7 +32,7 @@ const Page = () => {
 
     if (!uid) return;
 
-    fetch(`/api/ad?user=${uid.toLowerCase()}`)
+    fetch(`/api/ad?user=${uid}`)
       .then((res) => res.json())
       .then((data) => {
         if (!data.error) {

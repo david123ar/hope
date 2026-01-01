@@ -25,7 +25,7 @@ const Page = () => {
 
     const timeout = setTimeout(() => {
       const adContainer = document.getElementById(
-        "container-33a497c32aa8ecfffc3d4653d57e37f4"
+        "container-917495758f35e40004f3af3fe8c04eb8"
       );
       if (adContainer?.childNodes.length > 0) {
         setAdVisible(true);
@@ -54,13 +54,13 @@ const Page = () => {
       }}
     >
       <Script
-        src="//decencytopmost.com/33a497c32aa8ecfffc3d4653d57e37f4/invoke.js"
+        src="//brownrealization.com/917495758f35e40004f3af3fe8c04eb8/invoke.js"
         strategy="afterInteractive"
         data-cfasync="false"
         async
       />
       <div
-        id="container-33a497c32aa8ecfffc3d4653d57e37f4"
+        id="container-917495758f35e40004f3af3fe8c04eb8"
         style={{
           width: "100%",
           height: "100%",
@@ -85,7 +85,7 @@ const Page = () => {
             transition: "all 0.3s ease",
           }}
         >
-          Click to support Biolynk 💖
+          Click to support Henpro 💖
         </div>
       )}
     </div>
