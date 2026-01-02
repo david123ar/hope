@@ -72,7 +72,7 @@ const BioClient = ({ user, publisher, referredPublisher, username , links, desig
               boxShadow: theme.avatarShadow,
             }}
           >
-            <img src={user.avatar} alt="avatar" />
+            <img src={username === "animearenax" ? "arenax.jpg" : user.avatar} alt="avatar" />
           </div>
 
           {/* USERNAME */}

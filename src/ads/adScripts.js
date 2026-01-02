@@ -107,4 +107,85 @@ export const adUnits = [
     clickUrl:
       "https://brownrealization.com/a36rf2f1v8?key=d049fcc5428fd5d21f5d8ffa3b031339",
   },
+    {
+    id: 5022027,
+    index: 12,
+    scriptUrl:
+      "//brownrealization.com/1bae64c0710e800e92f48122d5a5da92/invoke.js",
+    containerId: "container-1bae64c0710e800e92f48122d5a5da92",
+    clickUrl:
+      "https://brownrealization.com/a36rf2f1v8?key=d049fcc5428fd5d21f5d8ffa3b031339",
+  },
+    {
+    id: 5022027,
+    index: 12,
+    scriptUrl:
+      "//brownrealization.com/1bae64c0710e800e92f48122d5a5da92/invoke.js",
+    containerId: "container-1bae64c0710e800e92f48122d5a5da92",
+    clickUrl:
+      "https://brownrealization.com/a36rf2f1v8?key=d049fcc5428fd5d21f5d8ffa3b031339",
+  },
+    {
+    id: 5022027,
+    index: 12,
+    scriptUrl:
+      "//brownrealization.com/1bae64c0710e800e92f48122d5a5da92/invoke.js",
+    containerId: "container-1bae64c0710e800e92f48122d5a5da92",
+    clickUrl:
+      "https://brownrealization.com/a36rf2f1v8?key=d049fcc5428fd5d21f5d8ffa3b031339",
+  },
+    {
+    id: 5022027,
+    index: 12,
+    scriptUrl:
+      "//brownrealization.com/1bae64c0710e800e92f48122d5a5da92/invoke.js",
+    containerId: "container-1bae64c0710e800e92f48122d5a5da92",
+    clickUrl:
+      "https://brownrealization.com/a36rf2f1v8?key=d049fcc5428fd5d21f5d8ffa3b031339",
+  },
+    {
+    id: 5022027,
+    index: 12,
+    scriptUrl:
+      "//brownrealization.com/1bae64c0710e800e92f48122d5a5da92/invoke.js",
+    containerId: "container-1bae64c0710e800e92f48122d5a5da92",
+    clickUrl:
+      "https://brownrealization.com/a36rf2f1v8?key=d049fcc5428fd5d21f5d8ffa3b031339",
+  },
+    {
+    id: 5022027,
+    index: 12,
+    scriptUrl:
+      "//brownrealization.com/1bae64c0710e800e92f48122d5a5da92/invoke.js",
+    containerId: "container-1bae64c0710e800e92f48122d5a5da92",
+    clickUrl:
+      "https://brownrealization.com/a36rf2f1v8?key=d049fcc5428fd5d21f5d8ffa3b031339",
+  },
+    {
+    id: 5022027,
+    index: 12,
+    scriptUrl:
+      "//brownrealization.com/1bae64c0710e800e92f48122d5a5da92/invoke.js",
+    containerId: "container-1bae64c0710e800e92f48122d5a5da92",
+    clickUrl:
+      "https://brownrealization.com/a36rf2f1v8?key=d049fcc5428fd5d21f5d8ffa3b031339",
+  },
+    {
+    id: 5022027,
+    index: 12,
+    scriptUrl:
+      "//brownrealization.com/1bae64c0710e800e92f48122d5a5da92/invoke.js",
+    containerId: "container-1bae64c0710e800e92f48122d5a5da92",
+    clickUrl:
+      "https://brownrealization.com/a36rf2f1v8?key=d049fcc5428fd5d21f5d8ffa3b031339",
+  },
+    {
+    id: 5022027,
+    index: 12,
+    scriptUrl:
+      "//brownrealization.com/1bae64c0710e800e92f48122d5a5da92/invoke.js",
+    containerId: "container-1bae64c0710e800e92f48122d5a5da92",
+    clickUrl:
+      "https://brownrealization.com/a36rf2f1v8?key=d049fcc5428fd5d21f5d8ffa3b031339",
+  },
 ];
